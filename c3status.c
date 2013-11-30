@@ -36,7 +36,7 @@ int main() {
 	printf("{\"version\":1}");
 	printf("[[],");
 	while(1) {
-		sleep(1); //refresh c3status all every second
+		sleep(1); //refresh c3status every second
 		fflush(stdout);
 		printf("[");
 		//display("MOC: ", getMocInfos(testMocState()), 0, 0);
