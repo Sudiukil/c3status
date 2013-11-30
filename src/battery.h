@@ -18,23 +18,37 @@ You should have received a copy of the GNU General Public License
 along with c3status.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-char *getBattery() { //get the battery percentage and the state (Charging/Discharging)
-	FILE *acpiStdout = popen("acpi -b | cut -d ' ' -f 3,4,5 | sed -e 's/Charging,/CHR:/' -e 's/Discharging,/BAT:/' -e 's/,//g'", "r");
-	fgets(buffer, sizeof(buffer), acpiStdout);
-	pclose(acpiStdout);
-	buffer[strlen(buffer)-1] = '\0';
+#include <stdlib.h>
+#include <string.h>
+
+float getBatteryDecim() { //get the battery percentage as a float
+	char buffer1[256];
+	char buffer2[256];
+
+	FILE *batteryFull = fopen("/sys/class/power_supply/BAT0/energy_full", "r");
+	FILE *batteryNow = fopen("/sys/class/power_supply/BAT0/energy_now", "r");
+	fgets(buffer1, sizeof(buffer1), batteryFull);
+	fgets(buffer2, sizeof(buffer2), batteryNow);
+	
+	float batteryDecim = atof(buffer2)/atof(buffer1);
+	batteryDecim *= 100;
+	
+	return batteryDecim;
+}
+
+char *getBatteryPcent(float batteryDecim) { //convert the battery percentage into a string
+	sprintf(buffer, "%.f", batteryDecim);
+	strcat(buffer, "%");
 	return buffer;
 }
 
-int testBatteryPcent() { //test the battery percent to colorize the output
-	FILE *acpiStdout = popen("acpi -b | cut -d ' ' -f 4 | sed -e 's/%,//'", "r");
-	fgets(buffer, sizeof(buffer), acpiStdout);
-	pclose(acpiStdout);
-	if(strlen(buffer)==3) {
-		if((int)buffer[0]>=52 && (int)buffer[0]<56) return 0; //default color between 40% and 80%
-		else if((int)buffer[0]<52) return 1; //yellow under 40%...
-		else if((int)buffer[0]>=56) return 1; //... and over 80%
-		else return 2; //red under 10% and at 100%
-	}
-	else return 2;
+char *getBatteryState() { //check if the battery is charging or discharging
+	FILE *batteryState = fopen("/sys/class/power_supply/BAT0/status", "r");
+	if(fgetc(batteryState)=='C') return "CHR: ";
+	else return "BAT: ";
+}
+
+int testBatteryPcent(float batteryDecim) { //test the battery percent to colorize the output
+	if(batteryDecim>25 || batteryDecim<95) return 0; //default color between 25% and 95%
+	else return 1; //yellow under (or equal to) 25% and over (or equal to) 95%
 }

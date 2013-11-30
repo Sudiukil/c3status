@@ -22,7 +22,7 @@ along with c3status.  If not, see <http://www.gnu.org/licenses/>.
 #include <string.h>
 #include <unistd.h>
 
-char buffer[256]; //buffer used in most functions
+char buffer[256];
 
 #include "src/time.h"
 #include "src/volume.h"
@@ -46,7 +46,7 @@ int main() {
 		//display("", getDiskUsage("sda8"), testDiskUsage("sda8"), 0);
 		//display("", getDiskUsage("sda9"), testDiskUsage("sda9"), 0);
 		//display("", getDiskUsage("sda10"), testDiskUsage("sda10"), 0);
-		//display("", getBattery(), testBatteryPcent(), 0);
+		//display(getBatteryState(), getBatteryPcent(getBatteryDecim()), testBatteryPcent(getBatteryDecim()), 0);
 		display("", getTime(), 0, 0);
 		display("", getVolume(), testVolumeState(),1);
 		printf("],");

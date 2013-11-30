@@ -1,3 +1,4 @@
-- Improve all the functions for making c3status lighter
+- Improve all the functions (use less shell commands)
 - Add new functions
 - Add a easier way to extend c3status (config file ?)
+- Improve Makefile (which is a lot useless for now)

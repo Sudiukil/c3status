@@ -7,7 +7,7 @@ c3status is probably useless without slight modifications for now because it was
 
 As i will continue to work on it, i will maintain a ToDo list in the repo with all the planned features !
 
---- Why is c3status is even existing ? There are a lot of other status bar ! ---
+--- Why is c3status even existing ? There are a lot of other status bar ! ---
 
 Inatially, i wanted more infos on my status bar than i3status could provide, as it is not extensible, so i searched for other status bar but i decided to write my own, just for fun !
 
