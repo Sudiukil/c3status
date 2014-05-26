@@ -1,35 +1,69 @@
-/*
-Get volume from ALSA.
-Copyright (C) 2013 Quentin Sonrel (Sudiukil).
+#include <alsa/asoundlib.h>
+#include <math.h>
+#include <string.h>
 
-This file is part of c3status.
+int *get_alsa_infos(char *selem_name) {
 
-c3status is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
+	snd_mixer_t *handle; //mixer handle
+	snd_mixer_selem_id_t *sid; //mixer simple element id
+	snd_mixer_selem_channel_id_t channel = SND_MIXER_SCHN_MONO; //simple element channel id
+	snd_mixer_elem_t *elem;
+	const char *card = "default"; //card name
 
-c3status is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+	long max, min, vol;
+	int is_active;
+	int *infos = calloc(2, sizeof(int));
 
-You should have received a copy of the GNU General Public License
-along with c3status.  If not, see <http://www.gnu.org/licenses/>.
-*/
+	snd_mixer_open(&handle, 0); //open an empty mixer on the mixer handle
+	snd_mixer_attach(handle, card); //attach the card to the handle
+	snd_mixer_selem_register(handle, NULL, NULL); //register a simple element on the handle with no options
+	snd_mixer_load(handle); //load the mixer elements
 
-char *getVolume() { //get the volume from alsa
-	FILE *amixerStdout = popen("amixer get Master | grep \"Mono:\" | cut -d '[' -f 2 | sed -e 's/ //g' -e 's/]//'", "r");
-	fgets(buffer, sizeof(buffer), amixerStdout);
-	pclose(amixerStdout);
-	buffer[strlen(buffer)-1] = '\0';
-	return buffer;
+	snd_mixer_selem_id_alloca(&sid); //allocate the id for the simple element
+	snd_mixer_selem_id_set_index(sid, 0); //set the index of the simple element
+	snd_mixer_selem_id_set_name(sid, selem_name); //set the name of the simple element
+
+	elem = snd_mixer_find_selem(handle, sid); //get the simple element from the handle
+
+	snd_mixer_selem_get_playback_volume_range(elem, &min, &max); //get the volume from the simple element
+	snd_mixer_selem_get_playback_volume(elem, channel, &vol); //get the volume from the simple element
+
+	snd_mixer_selem_get_playback_switch (elem, channel, &is_active); //get the simple element mixer status (muted or not)
+
+	snd_mixer_close(handle); //close the mixer
+
+	infos[0] = (int)round((float)vol/(float)max*100);
+	infos[1] = is_active;
+
+	return infos;
 }
 
-int testVolumeState() { //test the volume to colorize the output
-	FILE *amixerStdout = popen("amixer get Master | grep \"Mono:\" | cut -d '[' -f 4 | sed -e 's/on]/1/' -e 's/off]/0/'", "r");
-	fgets(buffer, sizeof(buffer), amixerStdout);
-	pclose(amixerStdout);
-	if(buffer[0]=='1') return 0; //default color if not muted
-	else return 1; //yellow if muted
+char *gen_alsa_str_volume_pcent(int *alsa_infos) {
+
+	int pcent = alsa_infos[0];
+	int is_active = alsa_infos[1];
+	char *str_pcent = calloc(8, sizeof(char));
+
+	if(!is_active) {
+		strcat(str_pcent, "M(");
+		strcat(str_pcent, itoa(pcent));
+		strcat(str_pcent, "%)");
+	}
+	else {
+		strcat(str_pcent, itoa(pcent));
+		str_pcent[strlen(str_pcent)] = '%';
+		str_pcent[strlen(str_pcent)] = '\0';
+	}
+
+	return str_pcent;
+}
+
+int test_alsa_volume_pcent(int *alsa_infos, int limit) {
+
+	int pcent = alsa_infos[0];
+	int is_active = alsa_infos[1];
+	
+	if(!is_active) return 1;
+	if(pcent>limit) return 2;
+	return 0;
 }

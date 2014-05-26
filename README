@@ -3,15 +3,13 @@
 c3status is a simple status bar for i3wm written in C.
 The main goal of c3status is to be simple to understand and easily extensible by writting functions and recompile the code.
 
-c3status is probably useless without slight modifications for now because it was originally written for my personal use only and is absolutely not optimized, but now it's "just working" i'll continue to work on it to make it a real status bar, usable by any i3wm user.
+c3status is probably useless without slight modifications for now because it was originally written for my personal use only and is absolutely not optimized, but now it's "just working" i'll continue to work on it to make it better.
 
-As i will continue to work on it, i will maintain a ToDo list in the repo with all the planned features !
+--- Why is c3status even existing ? There are a lot of status bar available ! ---
 
---- Why is c3status even existing ? There are a lot of other status bar ! ---
+Initially, i wanted more infos on my status bar than i3status could provide, as it is not very extensible, so i searched for other status bar but i decided to write my own, just for fun !
 
-Inatially, i wanted more infos on my status bar than i3status could provide, as it is not extensible, so i searched for other status bar but i decided to write my own, just for fun !
-
---- You are too slow ! Can i take your code and adapt it for me ? ---
+--- Can i take your code and adapt it for me ? ---
 
 Of course, that is the goal !
-c3status is free software under GNU GPL v3, so if you modify it for your personal use only you don't even have to worry about the license !
+c3status is under no licence so you can do everything you want with the code !
