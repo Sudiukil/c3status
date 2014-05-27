@@ -8,6 +8,7 @@
 #include "src/volume.h"
 #include "src/fs.h"
 #include "src/battery.h"
+#include "src/moc.h"
 
 int main(int argc, char *argv[]) {
 
@@ -18,6 +19,8 @@ loop:
 	sleep(1);
 	fflush(stdout);
 	printf("[");
+
+	display("MOC: ", get_moc_infos(), 0, 0);
 
 	int root_usage_pcent = get_fs_usage_pcent("/");
 	display("/: ", gen_fs_str_usage_pcent(root_usage_pcent), test_fs_usage_pcent(root_usage_pcent), 0);
