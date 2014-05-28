@@ -40,8 +40,8 @@ char *get_date(char separator) {
 	str_date[strlen(str_date)] = separator;
 	str_date[strlen(str_date)] = '\0';
 
-	if(tm->tm_mon<10) strcat(str_date, "0");
-	strcat(str_date, itoa(tm->tm_mon));
+	if(tm->tm_mon+1<10) strcat(str_date, "0");
+	strcat(str_date, itoa(tm->tm_mon+1));
 
 	str_date[strlen(str_date)] = separator;
 	str_date[strlen(str_date)] = '\0';
