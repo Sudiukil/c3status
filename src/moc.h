@@ -1,10 +1,10 @@
-#include <stdlib.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 int is_moc_running() {
 
-	char *return_code = calloc(2, sizeof(char));	
 	FILE *pgrep_stdout = popen("pgrep moc > /dev/null; echo $?", "r");
+	char return_code[4];
 
 	fgets(return_code, sizeof(return_code), pgrep_stdout);
 
@@ -17,14 +17,14 @@ int is_moc_running() {
 char *get_moc_infos() {
 
 	if(is_moc_running()) {
-		char *infos = calloc(128, sizeof(char));
-		FILE *mocp_stdout = popen("mocp -Q \"%state: %title %ct/%tl [%tt]\"", "r");
+		char *infos = calloc(256, sizeof(char));
+		FILE *mocp_stdout = popen("mocp -Q \"%state: %title %ct/%tl [%tt]\" | sed -e 's/\\/ \\[\\]//g'", "r");
 
-		fgets(infos, 128, mocp_stdout);
-
-		pclose(mocp_stdout);
+		fgets(infos, 256, mocp_stdout);
 
 		infos[strlen(infos)-1] = '\0';
+
+		pclose(mocp_stdout);
 
 		if(infos[0]=='S') return "STOP";
 		return infos;

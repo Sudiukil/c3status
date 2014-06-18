@@ -1,4 +1,5 @@
 #include <alsa/asoundlib.h>
+#include <stdlib.h>
 #include <math.h>
 #include <string.h>
 
@@ -7,7 +8,7 @@ int *get_alsa_infos(char *selem_name) {
 	snd_mixer_t *handle; //mixer handle
 	snd_mixer_selem_id_t *sid; //mixer simple element id
 	snd_mixer_selem_channel_id_t channel = SND_MIXER_SCHN_MONO; //simple element channel id
-	snd_mixer_elem_t *elem;
+	snd_mixer_elem_t *elem; //mixer element
 	const char *card = "default"; //card name
 
 	long max, min, vol;
@@ -25,10 +26,10 @@ int *get_alsa_infos(char *selem_name) {
 
 	elem = snd_mixer_find_selem(handle, sid); //get the simple element from the handle
 
-	snd_mixer_selem_get_playback_volume_range(elem, &min, &max); //get the volume from the simple element
+	snd_mixer_selem_get_playback_volume_range(elem, &min, &max); //get the volume range from the simple element
 	snd_mixer_selem_get_playback_volume(elem, channel, &vol); //get the volume from the simple element
 
-	snd_mixer_selem_get_playback_switch (elem, channel, &is_active); //get the simple element mixer status (muted or not)
+	snd_mixer_selem_get_playback_switch(elem, channel, &is_active); //get the simple element mixer status (muted or not)
 
 	snd_mixer_close(handle); //close the mixer
 
@@ -44,15 +45,13 @@ char *gen_alsa_str_volume_pcent(int *alsa_infos) {
 	int is_active = alsa_infos[1];
 	char *str_pcent = calloc(8, sizeof(char));
 
-	if(!is_active) {
-		strcat(str_pcent, "M(");
-		strcat(str_pcent, itoa(pcent));
-		strcat(str_pcent, "%)");
+	if(is_active) {
+		if(pcent<10) snprintf(str_pcent, 8, "0%d%%", pcent);
+		else snprintf(str_pcent, 8, "%d%%", pcent);
 	}
 	else {
-		strcat(str_pcent, itoa(pcent));
-		str_pcent[strlen(str_pcent)] = '%';
-		str_pcent[strlen(str_pcent)] = '\0';
+		if(pcent<10) snprintf(str_pcent, 8, "M(0%d%%", pcent);
+		else snprintf(str_pcent, 8, "M(%d%%)", pcent);
 	}
 
 	return str_pcent;
