@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
+#include <string.h>
 
 int get_battery_pcent() {
 
@@ -35,16 +36,17 @@ char *get_battery_status() {
 
 char *gen_battery_str_pcent(int battery_pcent) {
 
+	char *str_pcent = calloc(16, sizeof(char));
+
 	if(battery_pcent!=-1) {
-		char *str_pcent = calloc(16, sizeof(char));
 		char *status = get_battery_status();
 
 		if(battery_pcent<10) snprintf(str_pcent, 16, "0%d%% (%s)", battery_pcent, status);
 		else snprintf(str_pcent, 16, "%d%% (%s)", battery_pcent, status);
-
-		return str_pcent;
 	}
-	else return "No battery";
+	else strcpy(str_pcent, "No battery");
+	
+	return str_pcent;
 }
 
 int test_battery_pcent(int battery_pcent) {

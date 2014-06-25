@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 int is_moc_running() {
 
@@ -16,8 +17,9 @@ int is_moc_running() {
 
 char *get_moc_infos() {
 
+	char *infos = calloc(256, sizeof(char));
+			
 	if(is_moc_running()) {
-		char *infos = calloc(256, sizeof(char));
 		FILE *mocp_stdout = popen("mocp -Q \"%state: %title %ct/%tl [%tt]\" | sed -e 's/\\/ \\[\\]//g'", "r");
 
 		fgets(infos, 256, mocp_stdout);
@@ -26,8 +28,9 @@ char *get_moc_infos() {
 
 		pclose(mocp_stdout);
 
-		if(infos[0]=='S') return "STOP";
-		return infos;
+		if(infos[0]=='S') strcpy(infos, "STOP");
 	}
-	else return "STOP";
+	else strcpy(infos, "STOP");
+
+	return infos;
 }

@@ -1,11 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 char *normalize(int value, char appendix) {
 
-	if(value!=-1) {
-		char *str = calloc(8, sizeof(char));
+	char *str = calloc(8, sizeof(char));
 
+	if(value!=-1) {
 		switch(appendix) {
 			case '%':
 				if(value<10) snprintf(str, 8, "0%d%%", value);
@@ -20,10 +21,10 @@ char *normalize(int value, char appendix) {
 				exit(1);
 				break;
 		}
-
-		return str;
 	}
-	else return "Error";
+	else strcpy(str, "Error");
+
+	return str;
 }
 
 int test_value(int value, int max, int critical) {

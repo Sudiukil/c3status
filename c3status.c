@@ -10,135 +10,186 @@
 #include "src/mem.h"
 #include "src/cpu.h"
 #include "src/temp.h"
+#include "src/net.h"
 #include "src/moc.h"
 
 int main(int argc, char *argv[]) {
+
+	int num_data;
+	char *str_data;
 
 	printf("{\"version\":1}\n");
 	printf("[[],\n");
 
 	while(1) {
-		sleep(1);
+		//sleep(1);
 		fflush(stdout);
 		printf("[\n");
 
+		str_data = get_moc_infos();
 		display(
 				"moc",
 				"moc",
 				"MOC",
-				get_moc_infos(),
+				str_data,
 				"#767676",
 				NULL,
 				0,
 				0
 		);
+		free(str_data);
 
-		int cpu_load_pcent = get_cpu_load_pcent();
+		str_data = gen_str_speed(get_dl_speed("enp4s0"), 'o', 0);
+		display(
+				"net",
+				"download",
+				"NET",
+				str_data,
+				"#767676",
+				NULL,
+				0,
+				0
+		);
+		free(str_data);
+
+		str_data = gen_str_speed(get_ul_speed("enp4s0"), 'o', 0);
+		display(
+				"net",
+				"upload",
+				NULL,
+				str_data,
+				"#767676",
+				NULL,
+				0,
+				0
+		);
+		free(str_data);
+
+		num_data = get_cpu_load_pcent();
+		str_data = normalize(num_data, '%');
 		display(
 				"cpu",
 				"load",
 				"CPU",
-				normalize(cpu_load_pcent, '%'),
+				str_data,
 				"#767676",
 				NULL,
-				test_value(cpu_load_pcent, 75, 90),
+				test_value(num_data, 75, 90),
 				0
 		);
+		free(str_data);
 
-		int cpu_temp = get_cpu_temp();
+		num_data = get_cpu_temp();
+		str_data = normalize(num_data, 'C');
 		display(
 				"temp",
 				"cpu",
 				NULL,
-				normalize(cpu_temp, 'C'),
+				str_data,
 				"#767676",
 				NULL,
-				test_value(cpu_temp, 50, 75),
+				test_value(num_data, 50, 75),
 				0
 		);
+		free(str_data);
 
-		int mem_usage_pcent = get_mem_usage_pcent();
+		num_data = get_mem_usage_pcent();
+		str_data = normalize(num_data, '%');
 		display(
 				"mem",
-				"mem",
+				"load",
 				"MEM",
-				normalize(mem_usage_pcent, '%'),
+				str_data,
 				"#767676",
 				NULL,
-				test_value(mem_usage_pcent, 50, 75),
+				test_value(num_data, 50, 75),
 				0
 		);
+		free(str_data);
 
-		int root_usage_pcent = get_fs_usage_pcent("/");
+		num_data = get_fs_usage_pcent("/");
+		str_data = normalize(num_data, '%');
 		display(
 				"disk",
 				"root",
 				"/",
-				normalize(root_usage_pcent, '%'),
+				str_data,
 				"#767676",
 				NULL,
-				test_value(root_usage_pcent, 75, 90),
+				test_value(num_data, 75, 90),
 				0
 		);
+		free(str_data);
 
-		int usr_usage_pcent = get_fs_usage_pcent("/usr");
+		num_data = get_fs_usage_pcent("/usr");
+		str_data = normalize(num_data, '%');
 		display(
 				"disk",
 				"usr",
 				"/usr",
-				normalize(usr_usage_pcent, '%'),
+				str_data,
 				"#767676",
 				NULL,
-				test_value(usr_usage_pcent, 75, 90),
+				test_value(num_data, 75, 90),
 				0
 		);
+		free(str_data);
 
-		int home_usage_pcent = get_fs_usage_pcent("/home");
+		num_data = get_fs_usage_pcent("/home");
+		str_data = normalize(num_data, '%');
 		display(
 				"disk",
 				"home",
 				"/home",
-				normalize(home_usage_pcent, '%'),
+				str_data,
 				"#767676",
 				NULL,
-				test_value(home_usage_pcent, 75, 90),
+				test_value(num_data, 75, 90),
 				0
 		);
+		free(str_data);
 
-		int battery_pcent = get_battery_pcent();
+		num_data = get_battery_pcent();
+		str_data = gen_battery_str_pcent(num_data);
 		display(
 				"battery",
 				"bat0",
 				"BAT",
-				gen_battery_str_pcent(battery_pcent),
+				str_data,
 				"#767676",
 				NULL,
-				test_battery_pcent(battery_pcent),
+				test_battery_pcent(num_data),
 				0
 		);
+		free(str_data);
 
 		int *alsa_infos = get_alsa_infos("Master");
+		str_data = gen_alsa_str_volume_pcent(alsa_infos);
 		display(
 				"volume",
 				"master",
 				"VOL",
-				gen_alsa_str_volume_pcent(alsa_infos),
+				str_data,
 				"#767676",
 				NULL,
 				test_alsa_volume_pcent(alsa_infos, 50),
 				0
 		);
+		free(alsa_infos);
+		free(str_data);
 
+		str_data = get_time("%d/%m/%Y - %H:%M:%S");
 		display(
 				"time",
 				"local",
 				NULL,
-				get_time("%d/%m/%Y - %H:%M:%S"),
+				str_data,
 				NULL,
 				NULL,	
 				0,
 				1
 		);
+		free(str_data);
 
 		printf("],\n");
 	}

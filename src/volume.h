@@ -50,8 +50,8 @@ char *gen_alsa_str_volume_pcent(int *alsa_infos) {
 		else snprintf(str_pcent, 8, "%d%%", pcent);
 	}
 	else {
-		if(pcent<10) snprintf(str_pcent, 8, "M(0%d%%", pcent);
-		else snprintf(str_pcent, 8, "M(%d%%)", pcent);
+		if(pcent<10) snprintf(str_pcent, 8, "0%d%% [M]", pcent);
+		else snprintf(str_pcent, 8, "%d%% [M]", pcent);
 	}
 
 	return str_pcent;

@@ -99,4 +99,6 @@ void display(char *name, char *instance, char *label, char *data, char *label_co
 	free(json_data);
 
 	printf("%s\n", json_global);
+
+	free(json_global);
 }
