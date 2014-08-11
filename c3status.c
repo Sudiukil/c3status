@@ -11,7 +11,8 @@
 #include "src/cpu.h"
 #include "src/temp.h"
 #include "src/net.h"
-#include "src/moc.h"
+//#include "src/moc.h"
+#include "src/ncmpcpp.h"
 
 int main(int argc, char *argv[]) {
 
@@ -22,15 +23,15 @@ int main(int argc, char *argv[]) {
 	printf("[[],\n");
 
 	while(1) {
-		//sleep(1);
+		sleep(1);
 		fflush(stdout);
 		printf("[\n");
 
-		str_data = get_moc_infos();
+		str_data = get_ncmpcpp_infos();
 		display(
-				"moc",
-				"moc",
-				"MOC",
+				"ncmpcpp",
+				"ncmpcpp",
+				"♪",
 				str_data,
 				"#767676",
 				NULL,
@@ -172,7 +173,7 @@ int main(int argc, char *argv[]) {
 				str_data,
 				"#767676",
 				NULL,
-				test_alsa_volume_pcent(alsa_infos, 50),
+				test_alsa_volume_pcent(alsa_infos, 75),
 				0
 		);
 		free(alsa_infos);
