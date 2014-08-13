@@ -1,3 +1,6 @@
+// Copyright (c) 2014, Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
+// File under the terms of the ISC license, see LICENSE (or http://opensource.org/licenses/ISC) for complete copy.
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
