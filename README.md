@@ -36,8 +36,9 @@ Even if c3status aims to be extensible by anyone using it, i obviously wrote som
   - [x] moc current playing music
 
 - Other things to do:
-  - [ ] Real makefile
   - [ ] Cleaner and easier way to configure c3status (main C file is currently the only way to configure it)
+  - [ ] Better errors handling
+  - [ ] Real makefile
 
 ## How to install and use c3status
 
