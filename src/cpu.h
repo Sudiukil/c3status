@@ -28,3 +28,21 @@ int get_cpu_load_pcent() {
 	if(diff_total!=total) return((1000*(diff_total-diff_idle)/diff_total+5)/10);
 	else return 0;
 }
+
+int get_cpu_temp() {
+
+	FILE *current_temp_file;
+	int current_temp;
+
+	if(!(current_temp_file = fopen("/sys/class/hwmon/hwmon0/device/temp1_input", "r"))) {
+		if(!(current_temp_file = fopen("/sys/class/hwmon/hwmon0/temp1_input", "r"))) {
+			return -1;
+		}
+	}
+
+	fscanf(current_temp_file, "%d", &current_temp);
+
+	pclose(current_temp_file);
+
+	return current_temp/1000;
+}
