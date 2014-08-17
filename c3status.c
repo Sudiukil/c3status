@@ -11,7 +11,6 @@
 
 int main(int argc, char *argv[]) {
 
-	int num_data;
 	char *str_data;
 
 	printf("{\"version\":1}\n");
