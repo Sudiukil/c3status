@@ -27,8 +27,7 @@ int get_dl_speed(char *interface) {
 	}
 
 	if(strlen(format_dl)==0) {
-		strcpy(format_dl, interface);
-		strcat(format_dl, ": %lu");
+		snprintf(format_dl, 16, "%s: %%lu", interface);
 	}
 
 	sscanf(buffer, format_dl, &received);
@@ -61,8 +60,7 @@ int get_ul_speed(char *interface) {
 	}
 
 	if(strlen(format_ul)==0) {
-		strcpy(format_ul, interface);
-		strcat(format_ul, ": %lu %lu %lu %lu %lu %lu %lu %lu %lu");
+		snprintf(format_ul, 64, "%s: %%lu %%lu %%lu %%lu %%lu %%lu %%lu %%lu %%lu", interface);
 	}
 
 	sscanf(buffer, format_ul, &d, &d, &d, &d, &d, &d, &d, &d, &transmitted);
