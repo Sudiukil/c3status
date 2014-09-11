@@ -10,7 +10,7 @@ c3status is probably useless without slight modifications for now because it was
 
 Even if c3status aims to be extensible by anyone using it, i obviously wrote some functions for my personal use, and i plan to write some more, here is what is currently available and what will probably be:
 
-- [x] Basic infos:
+- Basic infos:
   - [x] System time and/or date
   - [x] Alsa volume
 
@@ -26,7 +26,7 @@ Even if c3status aims to be extensible by anyone using it, i obviously wrote som
   - [ ] Wifi infos (SSID, percentage, etc...)
 
 - Battery infos:
-  - [x] Battery pcent
+  - [x] Battery percentage
   - [x] Battery state
   - [ ] Possibily to select another battery than BAT0
   - [ ] Remaining time on battery
