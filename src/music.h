@@ -3,56 +3,58 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
+// Gets the current playing infos from ncmpcpp
 char *get_ncmpcpp_infos() {
 
-	char *infos = calloc(256, sizeof(char));
+    char *infos = calloc(256, sizeof(char));
 
-	FILE *ncmpcpp_stdout = popen("ncmpcpp --now-playing \"{%n. %t}|{%f} - {%a} {(%b)}\"", "r");
+    FILE *ncmpcpp_stdout = popen("ncmpcpp --now-playing \"{%n. %t}|{%f} - {%a} {(%b)}\"", "r");
 
-	fgets(infos, 256, ncmpcpp_stdout);
+    fgets(infos, 256, ncmpcpp_stdout);
 
-	infos[strlen(infos)-1] = '\0';
+    infos[strlen(infos)-1] = '\0';
 
-	pclose(ncmpcpp_stdout);
+    pclose(ncmpcpp_stdout);
 
-	if(strlen(infos)!=0) return infos;
-	else {
-		strcpy(infos, "stopped");
-		return infos;
-	}
+    if(strlen(infos)!=0) return infos;
+    else {
+	snprintf(infos, 256, "stopped");
+	return infos;
+    }
 }
 
+// Checks if MOC is playing music
 int is_moc_music_played() {
 
-	char *infos = calloc(8, sizeof(char));
+    char *infos = calloc(8, sizeof(char));
 
-	FILE *mocp_stdout = popen("mocp -Q \"%state\" 2> /dev/null", "r");
+    FILE *mocp_stdout = popen("mocp -Q \"%state\" 2> /dev/null", "r");
 
-	fgets(infos, 8, mocp_stdout);
+    fgets(infos, 8, mocp_stdout);
 
-	pclose(mocp_stdout);
+    pclose(mocp_stdout);
 
-	if(infos[0]!='S') return 1;
-	else return 0;
+    if(infos[0]!='S') return 1;
+    else return 0;
 }
 
+// Gets the current playing infos from mocp
 char *get_moc_infos() {
 
-	char *infos = calloc(256, sizeof(char));
+    char *infos = calloc(256, sizeof(char));
 
-	FILE *mocp_stdout = popen("mocp -Q \"%n. %t - %a (%A)\" 2> /dev/null", "r");
+    FILE *mocp_stdout = popen("mocp -Q \"%n. %t - %a (%A)\" 2> /dev/null", "r");
 
-	fgets(infos, 256, mocp_stdout);
+    fgets(infos, 256, mocp_stdout);
 
-	infos[strlen(infos)-1] = '\0';
+    infos[strlen(infos)-1] = '\0';
 
-	pclose(mocp_stdout);
+    pclose(mocp_stdout);
 
-	if(strlen(infos)!=0 && is_moc_music_played()) return infos;
-	else {
-		strcpy(infos, "stopped");
-		return infos;
-	}
+    if(strlen(infos)!=0 && is_moc_music_played()) return infos;
+    else {
+	snprintf(infos, 256, "stopped");
+	return infos;
+    }
 }

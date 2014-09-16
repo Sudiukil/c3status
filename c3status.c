@@ -11,31 +11,31 @@
 
 int main(int argc, char *argv[]) {
 
-	char *str_data;
+    char *str_data;
 
-	printf("{\"version\":1}\n");
-	printf("[[],\n");
+    printf("{\"version\":1}\n");
+    printf("[[],\n");
 
-	while(1) {
-		sleep(1);
-		fflush(stdout);
-		printf("[\n");
+    while(1) {
+	sleep(1);
+	fflush(stdout);
+	printf("[\n");
 
-		str_data = get_time("%d/%m/%Y - %H:%M:%S");
-		display(
-				"time",
-				"local",
-				NULL,
-				str_data,
-				NULL,
-				NULL,	
-				0,
-				1
-		);
-		free(str_data);
+	str_data = get_time("%d/%m/%Y - %H:%M:%S");
+	display(
+		"time",
+		"local",
+		NULL,
+		str_data,
+		NULL,
+		NULL,	
+		0,
+		1
+	       );
+	free(str_data);
 
-		printf("],\n");
-	}
+	printf("],\n");
+    }
 
-	return 0;
+    return 0;
 }

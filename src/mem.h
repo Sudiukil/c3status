@@ -4,23 +4,24 @@
 #include <stdio.h>
 #include <math.h>
 
+// Calculates the memory usage percentage
 int get_mem_usage_pcent() {
 
-	FILE *meminfo;
-	char buffer[128];
-	unsigned long total, avail, used;
+    FILE *meminfo;
+    char buffer[128];
+    unsigned long total, avail, used;
 
-	if(!(meminfo = fopen("/proc/meminfo", "r"))) return -1;
+    if(!(meminfo = fopen("/proc/meminfo", "r"))) return -1;
 
-	fgets(buffer, 128, meminfo);
-	sscanf(buffer, "MemTotal: %ld kB", &total);
-	fgets(buffer, 128, meminfo);
-	fgets(buffer, 128, meminfo);
-	sscanf(buffer, "MemAvailable: %ld kB", &avail);
+    fgets(buffer, 128, meminfo);
+    sscanf(buffer, "MemTotal: %ld kB", &total);
+    fgets(buffer, 128, meminfo);
+    fgets(buffer, 128, meminfo);
+    sscanf(buffer, "MemAvailable: %ld kB", &avail);
 
-	fclose(meminfo);
+    fclose(meminfo);
 
-	used = total-avail;
+    used = total-avail;
 
-	return((int)round((float)used/(float)total*100));
+    return((int)round((float)used/(float)total*100));
 }

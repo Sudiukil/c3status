@@ -4,13 +4,14 @@
 #include <time.h>
 #include <stdlib.h>
 
+// Gets the current system time in the given format
 char *get_time(char *format) {
 
-	time_t now = time(NULL);
-	struct tm *tm = localtime(&now);
-	char *str_time = calloc(32, sizeof(char));
+    time_t now = time(NULL);
+    struct tm *tm = localtime(&now);
+    char *str_time = calloc(32, sizeof(char));
 
-	if(!(strftime(str_time, 32, format, tm))) return "Error";
+    if(!(strftime(str_time, 32, format, tm))) return "Error";
 
-	return str_time;
+    return str_time;
 }
