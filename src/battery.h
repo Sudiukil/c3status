@@ -4,58 +4,69 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 
-int get_battery_pcent() {
+// Calculates the battery percentage
+int get_battery_pcent(char *battery_name) {
 
-	FILE *energy_full_file, *energy_now_file;
-	unsigned long energy_full, energy_now;
+    char *energy_full_file_path = calloc(64, sizeof(char));
+    char *energy_now_file_path = calloc(64, sizeof(char));
 
-	if(!(energy_full_file = fopen("/sys/class/power_supply/BAT0/energy_full", "r")) || !(energy_now_file = fopen("/sys/class/power_supply/BAT0/energy_now", "r"))) return -1;
+    FILE *energy_full_file, *energy_now_file;
+    unsigned long energy_full, energy_now;
 
-	fscanf(energy_full_file, "%lu", &energy_full);
-	fscanf(energy_now_file, "%lu", &energy_now);
+    snprintf(energy_full_file_path, 64, "/sys/class/power_supply/%s/energy_full", battery_name);
+    snprintf(energy_now_file_path, 64, "/sys/class/power_supply/%s/energy_now", battery_name);
 
-	fclose(energy_full_file);
-	fclose(energy_now_file);
+    if(!(energy_full_file = fopen(energy_full_file_path, "r")) || !(energy_now_file = fopen(energy_now_file_path, "r"))) return -1;
 
-	return((int)round((float)energy_now/(float)energy_full*100));
+    fscanf(energy_full_file, "%lu", &energy_full);
+    fscanf(energy_now_file, "%lu", &energy_now);
+
+    fclose(energy_full_file);
+    fclose(energy_now_file);
+
+    return((int)round((float)energy_now/(float)energy_full*100));
 }
 
-char *get_battery_status() {
+// Gets the battery status (battery, charging or absent)
+char *get_battery_status(char *battery_name) {
 
-	FILE *status_file;
-	char status[8];
+    char *status_file_path = calloc(64, sizeof(char));
+    FILE *status_file;
+    char status[8];
 
-	if(!(status_file = fopen("/sys/class/power_supply/BAT0/status", "r"))) return "ABS";
+    snprintf(status_file_path, 64, "/sys/class/power_supply/%s/status", battery_name);
 
-	fgets(status, sizeof(status), status_file);
+    if(!(status_file = fopen(status_file_path, "r"))) return "ABS";
 
-	fclose(status_file);
+    fgets(status, sizeof(status), status_file);
 
-	if(status[0]=='C') return "CHR";
-	return "BAT";
+    fclose(status_file);
+
+    if(status[0]=='C') return "CHR";
+    return "BAT";
 }
 
-int test_battery_pcent(int battery_pcent) {
+// Tests the battery percentage compaired to user defined max, warning and critical values
+int test_battery_pcent(int battery_pcent, int max, int warning, int critical) {
 
-	if(battery_pcent>10 && battery_pcent<=25) return 1;
-	if(battery_pcent<=10) return 2;
-	if(battery_pcent>=95) return 3;
-	if(battery_pcent==-1) return 2;
-	return 0;
+    if(battery_pcent>critical && battery_pcent<=warning) return 1;
+    if(battery_pcent<=critical) return 2;
+    if(battery_pcent>=max) return 3;
+    if(battery_pcent==-1) return 2;
+    return 0;
 }
 
-char *gen_battery_str_pcent(int battery_pcent) {
+// Generates the battery infos as a string (xy% (status))
+char *gen_battery_str_infos(int battery_pcent, char *battery_status) {
 
-	char *str_pcent = calloc(16, sizeof(char));
-	char *status = get_battery_status();
+    char *str_pcent = calloc(16, sizeof(char));
 
-	if(battery_pcent!=-1) {
-		if(battery_pcent<10) snprintf(str_pcent, 16, "0%d%% (%s)", battery_pcent, status);
-		else snprintf(str_pcent, 16, "%d%% (%s)", battery_pcent, status);
-	}
-	else strcpy(str_pcent, "No battery");
-	
-	return str_pcent;
+    if(battery_pcent!=-1) {
+	if(battery_pcent<10) snprintf(str_pcent, 16, "0%d%% (%s)", battery_pcent, battery_status);
+	else snprintf(str_pcent, 16, "%d%% (%s)", battery_pcent, battery_status);
+    }
+    else snprintf(str_pcent, 16, "No battery");
+
+    return str_pcent;
 }

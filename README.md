@@ -23,12 +23,13 @@ Even if c3status aims to be extensible by anyone using it, i obviously wrote som
 
 - Network infos:
   - [x] Network speed
-  - [ ] Wifi infos (SSID, percentage, etc...)
+  - [ ] Wifi ESSID
+  - [ ] Wifi signal percentage
 
 - Battery infos:
   - [x] Battery percentage
   - [x] Battery state
-  - [ ] Possibily to select another battery than BAT0
+  - [x] Possibily to select another battery than BAT0
   - [ ] Remaining time on battery
 
 - Other infos:
