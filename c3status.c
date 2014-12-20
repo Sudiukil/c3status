@@ -3,39 +3,44 @@
 
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/time.h>
 
-#include "src/general.h"
-#include "src/display.h"
-
-#include "src/time.h"
+#include "all.h"
+#include "config.h"
 
 int main(int argc, char *argv[]) {
 
-    char *str_data;
+	struct timeval t1, t2;
+	float elapsed_time;
+	int refresh_interval;
 
-    printf("{\"version\":1}\n");
-    printf("[[],\n");
+	if(argc>1 && argv[1]!=NULL) {
+		sscanf(argv[1], "%d", &refresh_interval);
+		refresh_interval = refresh_interval*1000;
+	}
+	else refresh_interval = 1000;
 
-    while(1) {
-	sleep(1);
-	fflush(stdout);
-	printf("[\n");
+	printf("{\"version\":1}\n");
+	printf("[[],\n");
 
-	str_data = get_time("%d/%m/%Y - %H:%M:%S");
-	display(
-		"time",
-		"local",
-		NULL,
-		str_data,
-		NULL,
-		NULL,	
-		0,
-		1
-	       );
-	free(str_data);
+	conf();
 
-	printf("],\n");
-    }
+	while(1) {
+		gettimeofday(&t1, NULL);
 
-    return 0;
+		fflush(stdout);
+		printf("[\n");
+
+		update();
+
+		printf("{\"full_text\":\"\"}");
+
+		printf("],\n");
+
+		gettimeofday(&t2, NULL);
+		elapsed_time = ((t2.tv_sec-t1.tv_sec)*1000)+((t2.tv_usec-t1.tv_usec)/1000);
+		if(elapsed_time<refresh_interval) usleep((refresh_interval-elapsed_time)*1000);
+	}
+
+	return 0;
 }
