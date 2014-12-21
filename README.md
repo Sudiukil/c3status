@@ -2,9 +2,8 @@
 
 c3status is a simple status bar for i3wm written in C.
 
-The main goal of c3status is to be simple to understand and easily extensible by writting functions and recompile the code, which allow you to display almost anything in your status bar.
-
-c3status is probably useless without slight modifications for now because it was originally written for my personal use only and is absolutely not optimized, but now it's "just working" i'll continue to work on it to make it better.
+The main goal of c3status is to be simple to understand and easily extensible by writing functions and recompile the code, which allow you to display almost anything in your status bar.
+c3status is designed to be as lightweight as possible by using system calls and by getting info at a low level without needing to run shell commands.
 
 ## Current and planned features
 
@@ -23,13 +22,13 @@ Even if c3status aims to be extensible by anyone using it, i obviously wrote som
 
 - Network infos:
   - [x] Network speed
-  - [ ] Wifi ESSID
+  - [x] Wifi ESSID
   - [ ] Wifi signal percentage
 
 - Battery infos:
   - [x] Battery percentage
   - [x] Battery state
-  - [x] Possibily to select another battery than BAT0
+  - [x] Possibility to select another battery than BAT0
   - [ ] Remaining time on battery
 
 - Other infos:
@@ -37,53 +36,35 @@ Even if c3status aims to be extensible by anyone using it, i obviously wrote som
   - [x] moc current playing music
 
 - Other things to do:
-  - [ ] Cleaner and easier way to configure c3status (main C file is currently the only way to configure it)
-  - [ ] Better errors handling
-  - [ ] Real makefile
+  - [x] Cleaner and easier way to configure c3status (main C file is currently the only way to configure it)
+  - [x] Better errors handling
+  - [x] Real makefile
+  - [x] Man page
 
 ## How to install and use c3status
 
-The installation process for c3status is quite rudimentary for now, you just have to download it, compile it and make i3wm use it. Following steps will do the job:
+Installing c3status is quite easy:
 
 ```
-git clone "https://github.com/Sudiukil/c3status"
-cd c3status
-make
+$ git clone "https://github.com/Sudiukil/c3status"
+$ cd c3status
+# make install
 ```
 
-Then you need to modify the *status_command* line in you i3wm config file to use the c3status generated executable, as an example:
+Then you need to modify the *status_command* line in you i3wm config file to use c3status:
 
-> status_command ~/.i3/c3status/c3status
+> status_command c3status
 
-if you cloned c3status repo in ~/.i3 .
+You can also specify an update interval in seconds (default is 1) with the '-t' option:
+
+> status_command c3status -t 5
 
 ## How to configure c3status
 
-There is currently no config file, to change what is displayed by c3status you need to modify **c3status.c** (which is only containing display instructions anyway) and recompile it.
+To change what is displayed by c3status you need to edit a **config.h** file.
 
-Provided **c3status.c** only displays system time and date so you can use it as a simple example and a base to add everything you want.
-
-There are currently two steps to follow to display something:
-
-1. Include the header file (.h) corresponding to what you want to display (ex: time.h is for system time): `#include "path_to_the_header"`
-2. Use the `display()` function according to this specification:
-
-```
-char *str_data = char *function_returning_a_data();
-display(
-	char *name, 		//name of the data (ex: "cpu-temp")
-	char *instance, 	//instance of the data (ex: "core 1")
-	char *label, 		//label of the data (ex: "CPU1")
-	str_data, 			//the data itself, previously stored in the str_data variable
-	char *label_color, 	//the label display color (ex: "#ff0000")
-	char *data_color, 	//the data display color (ex: "#ffff00")
-	int priority, 		//priority of the data (defining it's color, should be handled by a function checking the data value)
-	int is_last 		//set to 1 only in the last display() call
-);
-free(str_data);
-```
-
-See provided **c3status.c** for a concrete example.
+Provided **config.example.c** displays a few informations on the status bar and quickly explains how to write your **config.h**.
+You can also see the man page for more info about the way to configure c3status.
 
 ## License
 
