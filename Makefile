@@ -20,14 +20,18 @@ config.h:
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@ $(LDFLAGS)
 
+manpage:
+	make -C man
+
 clean:
 	rm src/*.o
 
 mrproper: clean
 	rm c3status
 
-install: c3status
+install: c3status man/c3status.1
 	install -m 755 c3status $(DESTDIR)$(PREFIX)/bin/c3status
+	install -m 644 man/c3status.1 $(DESTDIR)$(PREFIX)/share/man/man1
 
 uninstall:
 	rm $(DESTDIR)$(PREFIX)/bin/c3status

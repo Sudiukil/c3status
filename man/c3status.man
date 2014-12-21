@@ -1,0 +1,260 @@
+c3status(1)
+===========
+Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
+v0.1, December 2014
+
+== NAME
+
+c3status - Lightweight status line generator for i3bar
+
+== SYNOPSIS
+
+c3status [-t REFRESH_INTERVAL] [-h]
+
+== OPTIONS
+
+-t::
+Specifies a refresh interval in seconds for the status bar (1 second is default).
+
+-h::
+Displays an help message describing c3status options.
+
+== DESCRIPTION
+
+c3status is a simple status bar for i3wm written in C.
+
+The main goal of c3status is to be simple to understand and easily extensible by writing functions and recompile the code, which allow you to display almost anything in your status bar.
+c3status is designed to be as lightweight as possible by using system calls and by getting info at a low level without needing to run shell commands.
+
+== CONFIGURATION
+
+c3status is configured by editing the config.h file and recompiling the source code.
+The config.h file is basically divided in three parts: the declaration of what will be displayed (the "items"), the configuration of the status line, and the display of the items.
+
+More specifically, item declaration is a variable (structure) declaration, configuration sets the structure member values and display simply displays the structure content correctly formated.
+See below for an example.
+
+.Sample configuration
+-------------------------------------------------
+date d;
+volume v;
+mem m;
+cpu c;
+fs home;
+fs root;
+net n;
+music mu;
+
+void conf(void) {
+
+	label_color = "#767676";
+	data_color = "#cccccc";
+
+	d.format = "%d/%m/%Y - %H:%M:%S";	
+
+	c.load_pcent_enable = 1;
+	c.temperature_enable = 1;
+
+	n.interface = "enp4s0";
+	n.unit = 'o';
+
+	home.mount_point = "/home";
+	root.mount_point = "/";
+
+	mu.ncmpcpp = 1;
+	mu.label = "♪";
+}
+
+void update(void) {
+
+	display_music(&mu);
+	display_fs(&root);
+	display_fs(&home);
+	display_net(&n);
+	display_cpu(&c);
+	display_mem(&m);
+	display_volume(&v);
+	display_date(&d);
+}
+-------------------------------------------------
+
+=== General
+
+c3status have a few general options you can change, see bellow.
+
+*Syntax:* option = value;
+
+*Option list:*::
+
+label_color (type: string literal; default value: the statusline color in your i3wm config file):::
+The color for every displayed label, in hex format.
+
+data_color (type: string literal; default value : the statusline color in your i3wm config file):::
+The color for every data displayed, in hex format.
+
+ok_color (type: string literal; default value: "#00ff00"):::
+The color when a data value is higher than a optimal max value (e.g: a battery max value), in hex format.
+
+warning_color (type: string literal; default value: "#ffff00"):::
+The color when a data is between warning and critical value, in hex format.
+
+critical_color (type: string literal; default value: "#ff0000"):::
+The color when a data value is critical, in hex format.
+
+=== Global
+
+There is currently one global attribute that applies to every items : label. See bellow for syntax.
+The label is a string which will be displayed next to an item on the status line.
+
+*Syntax:* <item_name>.label = "<hexadecimal rgb color code>"
+
+*Default value:* Depends on the item, see if the default is ok for you or change it otherwise :)
+
+=== Date
+
+Formatted system time and date.
+
+*Declaration:* date <name>
+
+*Attributes:*::
+
+format (type: string literal; default value: "%d/%m/%Y - %H:%M:%S"):::
+Format for the system time and date.
+
+=== Volume (ALSA only)
+
+ALSA device volume.
+
+*Declaration:* volume <name>
+
+*Attributes:*::
+
+selem (type: string literal; default value: "Master"):::
+Name of the device on which to read the volume from.
+
+limit (type: numerical value; default value: 75):::
+Volume limit (warning color if equal or above).
+
+=== Battery
+
+Battery percentage and status (charging/discharging)
+
+*Declaration:* battery <name>
+
+*Attributes:*::
+
+name (type: string literal; default value: "BAT0"):::
+Battery name, can be found /sys/class/power_supply/.
+
+max_pcent (type: numerical value; default value: 95):::
+Max value for the battery percentage (ok color if equal or above).
+
+warning_pcent (type: numerical value; default value: 25):::
+Warning value for the battery percentage (warning color if between warning_pcent and critical_pcent).
+
+critical_pcent (type: numerical value: default value: 10):::
+Critical value for the battery percentage (critical color if bellow).
+
+=== Memory (RAM)
+
+Memory usage percentage.
+
+*Declaration:* mem <name>
+
+*Attributes:*::
+
+warning_usage_pcent (type: numerical value; default value: 75):::
+Warning value for the memory usage percentage (warning color if between warning_usage_pcent and critical_usage_pcent).
+
+critical_usage_pcent (type: numerical value; default value: 90):::
+Critical value for the memory usage percentage (critical color if equal or above).
+
+=== CPU
+
+CPU usage load percentage and temperature.
+
+*Declaration:* cpu <name>;
+
+*Attributes:*::
+
+load_pcent_enable (type: boolean (0 or 1); default value: 0):::
+Enables the display of CPU load percentage if set to 1.
+
+warning_load_pcent (type: numerical value; default value: 75):::
+Warning value for the CPU load percentage (warning color if between warning_load_pcent and critical_load_pcent).
+
+critical_load_pcent (type: numerical value; default value: 90):::
+Critical value for the CPU load percentage (critical color if equal or above).
+
+temperature_enable (type: boolean (0 or 1); default value: 0):::
+Enables the display of CPU temperature if set to 1.
+
+warning_temperature (type: numerical value; default value: 60):::
+Warning value for the CPU temperature (warning color if between warning_temperature and critical_temperature).
+
+critical_temperature (type: numerical value; default value: 75):::
+Critical value for the CPU temperature (critical color if equal or above).
+
+=== Net
+
+Network interface upload and download speed.
+
+*Declaration:* net <name>;
+
+*Attributes:*::
+
+interface (type: string literal; default value: "eth0"):::
+Name of the network interface from which to get the speeds.
+
+unit (type: character; default value: \'B'):::
+Unit the status bar should use for displaying speeds.
+
+=== WIFI
+
+Wireless network interface SSID.
+
+interface (type: string literal; default value: "wlan0"):::
+Name of the network interface from which to get the SSID.
+
+=== Filesystems
+
+Filesystem usage percentage.
+
+*Declaration:* fs <name>;
+
+*Attributes:*::
+
+mount_point (type: string literal; default value: "/"):::
+Mount point of the filesystem from which to get the usage percentage.
+
+warning_usage_pcent (type: numerical value; default value: 75):::
+Warning value for the filesystem usage percentage (warning color if between warning_usage_pcent and critical_usage_pcent).
+
+critical_usage_pcent (type: numerical value; default value: 90):::
+Critical value for the filesystem usage percentage (critical color if equal).
+
+=== Music
+
+NCMPCPP or MOC played title (warning: uses shell commands calls, may slow down c3status).
+
+*Declaration:* music <name>;
+
+*Attributes:*::
+
+ncmpcpp (type: boolean (0 or 1); default value: 0):::
+Enables the display of ncmpcpp info if set to 1.
+
+moc (type: boolean (0 or 1); default value: 0):::
+Enables the display of moc info if set to 1.
+
+== BUGS
+
+Probably a lot :)
+
+Report bugs to <sudiukil@gmx.fr>
+
+== COPYRIGHT
+
+Copyright (c) 2014, Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
+File under the terms of the ISC license.
+<http://opensource.org/licenses/ISC>

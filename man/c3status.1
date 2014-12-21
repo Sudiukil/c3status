@@ -1,0 +1,352 @@
+'\" t
+.\"     Title: c3status
+.\"    Author: Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
+.\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
+.\"      Date: December 2014
+.\"    Manual: \ \&
+.\"    Source: \ \& 0.1
+.\"  Language: English
+.\"
+.TH "C3STATUS" "1" "December 2014" "\ \& 0\&.1" "\ \&"
+.\" -----------------------------------------------------------------
+.\" * Define some portability stuff
+.\" -----------------------------------------------------------------
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.\" http://bugs.debian.org/507673
+.\" http://lists.gnu.org/archive/html/groff/2009-02/msg00013.html
+.\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.ie \n(.g .ds Aq \(aq
+.el       .ds Aq '
+.\" -----------------------------------------------------------------
+.\" * set default formatting
+.\" -----------------------------------------------------------------
+.\" disable hyphenation
+.nh
+.\" disable justification (adjust text to left margin only)
+.ad l
+.\" -----------------------------------------------------------------
+.\" * MAIN CONTENT STARTS HERE *
+.\" -----------------------------------------------------------------
+.SH "NAME"
+c3status \- Lightweight status line generator for i3bar
+.SH "SYNOPSIS"
+.sp
+c3status [\-t REFRESH_INTERVAL] [\-h]
+.SH "OPTIONS"
+.PP
+\-t
+.RS 4
+Specifies a refresh interval in seconds for the status bar (1 second is default)\&.
+.RE
+.PP
+\-h
+.RS 4
+Displays an help message describing c3status options\&.
+.RE
+.SH "DESCRIPTION"
+.sp
+c3status is a simple status bar for i3wm written in C\&.
+.sp
+The main goal of c3status is to be simple to understand and easily extensible by writing functions and recompile the code, which allow you to display almost anything in your status bar\&. c3status is designed to be as lightweight as possible by using system calls and by getting info at a low level without needing to run shell commands\&.
+.SH "CONFIGURATION"
+.sp
+c3status is configured by editing the config\&.h file and recompiling the source code\&. The config\&.h file is basically divided in three parts: the declaration of what will be displayed (the "items"), the configuration of the status line, and the display of the items\&.
+.sp
+More specifically, item declaration is a variable (structure) declaration, configuration sets the structure member values and display simply displays the structure content correctly formated\&. See below for an example\&.
+.PP
+\fBSample configuration\fR. 
+.sp
+.if n \{\
+.RS 4
+.\}
+.nf
+date d;
+volume v;
+mem m;
+cpu c;
+fs home;
+fs root;
+net n;
+music mu;
+
+void conf(void) {
+
+        label_color = "#767676";
+        data_color = "#cccccc";
+
+        d\&.format = "%d/%m/%Y \- %H:%M:%S";
+
+        c\&.load_pcent_enable = 1;
+        c\&.temperature_enable = 1;
+
+        n\&.interface = "enp4s0";
+        n\&.unit = \*(Aqo\*(Aq;
+
+        home\&.mount_point = "/home";
+        root\&.mount_point = "/";
+
+        mu\&.ncmpcpp = 1;
+        mu\&.label = "♪";
+}
+
+void update(void) {
+
+        display_music(&mu);
+        display_fs(&root);
+        display_fs(&home);
+        display_net(&n);
+        display_cpu(&c);
+        display_mem(&m);
+        display_volume(&v);
+        display_date(&d);
+}
+.fi
+.if n \{\
+.RE
+.\}
+.sp
+.SS "General"
+.sp
+c3status have a few general options you can change, see bellow\&.
+.sp
+\fBSyntax:\fR option = value;
+.PP
+\fBOption list:\fR
+.RS 4
+.PP
+label_color (type: string literal; default value: the statusline color in your i3wm config file)
+.RS 4
+The color for every displayed label, in hex format\&.
+.RE
+.PP
+data_color (type: string literal; default value : the statusline color in your i3wm config file)
+.RS 4
+The color for every data displayed, in hex format\&.
+.RE
+.PP
+ok_color (type: string literal; default value: "#00ff00")
+.RS 4
+The color when a data value is higher than a optimal max value (e\&.g: a battery max value), in hex format\&.
+.RE
+.PP
+warning_color (type: string literal; default value: "#ffff00")
+.RS 4
+The color when a data is between warning and critical value, in hex format\&.
+.RE
+.PP
+critical_color (type: string literal; default value: "#ff0000")
+.RS 4
+The color when a data value is critical, in hex format\&.
+.RE
+.RE
+.SS "Global"
+.sp
+There is currently one global attribute that applies to every items : label\&. See bellow for syntax\&. The label is a string which will be displayed next to an item on the status line\&.
+.sp
+\fBSyntax:\fR <item_name>\&.label = "<hexadecimal rgb color code>"
+.sp
+\fBDefault value:\fR Depends on the item, see if the default is ok for you or change it otherwise :)
+.SS "Date"
+.sp
+Formatted system time and date\&.
+.sp
+\fBDeclaration:\fR date <name>
+.PP
+\fBAttributes:\fR
+.RS 4
+.PP
+format (type: string literal; default value: "%d/%m/%Y \- %H:%M:%S")
+.RS 4
+Format for the system time and date\&.
+.RE
+.RE
+.SS "Volume (ALSA only)"
+.sp
+ALSA device volume\&.
+.sp
+\fBDeclaration:\fR volume <name>
+.PP
+\fBAttributes:\fR
+.RS 4
+.PP
+selem (type: string literal; default value: "Master")
+.RS 4
+Name of the device on which to read the volume from\&.
+.RE
+.PP
+limit (type: numerical value; default value: 75)
+.RS 4
+Volume limit (warning color if equal or above)\&.
+.RE
+.RE
+.SS "Battery"
+.sp
+Battery percentage and status (charging/discharging)
+.sp
+\fBDeclaration:\fR battery <name>
+.PP
+\fBAttributes:\fR
+.RS 4
+.PP
+name (type: string literal; default value: "BAT0")
+.RS 4
+Battery name, can be found /sys/class/power_supply/\&.
+.RE
+.PP
+max_pcent (type: numerical value; default value: 95)
+.RS 4
+Max value for the battery percentage (ok color if equal or above)\&.
+.RE
+.PP
+warning_pcent (type: numerical value; default value: 25)
+.RS 4
+Warning value for the battery percentage (warning color if between warning_pcent and critical_pcent)\&.
+.RE
+.PP
+critical_pcent (type: numerical value: default value: 10)
+.RS 4
+Critical value for the battery percentage (critical color if bellow)\&.
+.RE
+.RE
+.SS "Memory (RAM)"
+.sp
+Memory usage percentage\&.
+.sp
+\fBDeclaration:\fR mem <name>
+.PP
+\fBAttributes:\fR
+.RS 4
+.PP
+warning_usage_pcent (type: numerical value; default value: 75)
+.RS 4
+Warning value for the memory usage percentage (warning color if between warning_usage_pcent and critical_usage_pcent)\&.
+.RE
+.PP
+critical_usage_pcent (type: numerical value; default value: 90)
+.RS 4
+Critical value for the memory usage percentage (critical color if equal or above)\&.
+.RE
+.RE
+.SS "CPU"
+.sp
+CPU usage load percentage and temperature\&.
+.sp
+\fBDeclaration:\fR cpu <name>;
+.PP
+\fBAttributes:\fR
+.RS 4
+.PP
+load_pcent_enable (type: boolean (0 or 1); default value: 0)
+.RS 4
+Enables the display of CPU load percentage if set to 1\&.
+.RE
+.PP
+warning_load_pcent (type: numerical value; default value: 75)
+.RS 4
+Warning value for the CPU load percentage (warning color if between warning_load_pcent and critical_load_pcent)\&.
+.RE
+.PP
+critical_load_pcent (type: numerical value; default value: 90)
+.RS 4
+Critical value for the CPU load percentage (critical color if equal or above)\&.
+.RE
+.PP
+temperature_enable (type: boolean (0 or 1); default value: 0)
+.RS 4
+Enables the display of CPU temperature if set to 1\&.
+.RE
+.PP
+warning_temperature (type: numerical value; default value: 60)
+.RS 4
+Warning value for the CPU temperature (warning color if between warning_temperature and critical_temperature)\&.
+.RE
+.PP
+critical_temperature (type: numerical value; default value: 75)
+.RS 4
+Critical value for the CPU temperature (critical color if equal or above)\&.
+.RE
+.RE
+.SS "Net"
+.sp
+Network interface upload and download speed\&.
+.sp
+\fBDeclaration:\fR net <name>;
+.PP
+\fBAttributes:\fR
+.RS 4
+.PP
+interface (type: string literal; default value: "eth0")
+.RS 4
+Name of the network interface from which to get the speeds\&.
+.RE
+.PP
+unit (type: character; default value: \*(AqB\*(Aq)
+.RS 4
+Unit the status bar should use for displaying speeds\&.
+.RE
+.RE
+.SS "WIFI"
+.sp
+Wireless network interface SSID\&.
+.PP
+interface (type: string literal; default value: "wlan0")
+.RS 4
+Name of the network interface from which to get the SSID\&.
+.RE
+.SS "Filesystems"
+.sp
+Filesystem usage percentage\&.
+.sp
+\fBDeclaration:\fR fs <name>;
+.PP
+\fBAttributes:\fR
+.RS 4
+.PP
+mount_point (type: string literal; default value: "/")
+.RS 4
+Mount point of the filesystem from which to get the usage percentage\&.
+.RE
+.PP
+warning_usage_pcent (type: numerical value; default value: 75)
+.RS 4
+Warning value for the filesystem usage percentage (warning color if between warning_usage_pcent and critical_usage_pcent)\&.
+.RE
+.PP
+critical_usage_pcent (type: numerical value; default value: 90)
+.RS 4
+Critical value for the filesystem usage percentage (critical color if equal)\&.
+.RE
+.RE
+.SS "Music"
+.sp
+NCMPCPP or MOC played title (warning: uses shell commands calls, may slow down c3status)\&.
+.sp
+\fBDeclaration:\fR music <name>;
+.PP
+\fBAttributes:\fR
+.RS 4
+.PP
+ncmpcpp (type: boolean (0 or 1); default value: 0)
+.RS 4
+Enables the display of ncmpcpp info if set to 1\&.
+.RE
+.PP
+moc (type: boolean (0 or 1); default value: 0)
+.RS 4
+Enables the display of moc info if set to 1\&.
+.RE
+.RE
+.SH "BUGS"
+.sp
+Probably a lot :)
+.sp
+Report bugs to <sudiukil@gmx\&.fr>
+.SH "COPYRIGHT"
+.sp
+Copyright (c) 2014, Quentin Sonrel (Sudiukil) <sudiukil@gmx\&.fr> File under the terms of the ISC license\&. http://opensource\&.org/licenses/ISC
+.SH "AUTHOR"
+.PP
+\fBQuentin Sonrel (Sudiukil)\fR <\&sudiukil@gmx\&.fr\&>
+.RS 4
+Author.
+.RE
