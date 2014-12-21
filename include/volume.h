@@ -9,10 +9,10 @@
 #include <alsa/asoundlib.h>
 
 typedef struct volume {
+	const char *selem;
+
 	int volume;
 	int status;
-
-	const char *selem;
 
 	int limit;
 
