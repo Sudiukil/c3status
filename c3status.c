@@ -8,15 +8,39 @@
 #include "all.h"
 #include "config.h"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char **argv) {
 
 	struct timeval t1, t2;
 	float elapsed_time;
 	int refresh_interval;
 
-	if(argc>1 && argv[1]!=NULL) {
-		sscanf(argv[1], "%d", &refresh_interval);
-		refresh_interval = refresh_interval*1000;
+	if(argc>1) {
+		if(argv[1][0]=='-') {
+			switch(argv[1][1]) {
+				case 'h':
+					printf("Usage: c3status [-t INTERVAL] [-h]\n");
+					return 0;
+					break;
+				case 't':
+					if(argv[2] && sscanf(argv[2], "%d", &refresh_interval)) refresh_interval = refresh_interval*1000;
+					else {
+						printf("'%s' option need a numerical value.\n", argv[1]);
+						printf("See 'c3status -h' or 'man c3status' for more information.\n");
+						return 1;
+					}
+					break;
+				default:
+					printf("c3status: invalid '%s' option.\n", argv[1]);
+					printf("See 'c3status -h' or 'man c3status' for more information.\n");
+					return 1;
+					break;
+			}
+		}
+		else {
+			printf("c3status: invalid '%s' option.\n", argv[1]);
+			printf("See 'c3status -h' or 'man c3status' for more information.\n");
+			return 1;
+		}
 	}
 	else refresh_interval = 1000;
 
