@@ -38,16 +38,11 @@ char *gen_moc_infos() {
 
 	FILE *mocp_stdout = popen("mocp -Q \"%n. %t - %a (%A)\" 2> /dev/null", "r");
 
-	if(fgets(infos, 256, mocp_stdout) && is_moc_music_played()) {
-		infos[strlen(infos)-1] = '\0';
-		pclose(mocp_stdout);
-		return infos;
-	}
-	else {
-		snprintf(infos, 256, "stopped");
-		pclose(mocp_stdout);
-		return infos;
-	}
+	if(fgets(infos, 256, mocp_stdout) && is_moc_music_played()) infos[strlen(infos)-1] = '\0';
+	else snprintf(infos, 256, "stopped");
+
+	pclose(mocp_stdout);
+	return infos;
 }
 
 void update_music(music *m) {
