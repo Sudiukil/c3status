@@ -150,7 +150,7 @@ There is currently one global attribute that applies to every items : label\&. S
 .sp
 Formatted system time and date\&.
 .sp
-\fBDeclaration:\fR date <name>
+\fBDeclaration:\fR date <name>;
 .PP
 \fBAttributes:\fR
 .RS 4
@@ -164,7 +164,7 @@ Format for the system time and date\&.
 .sp
 ALSA device volume\&.
 .sp
-\fBDeclaration:\fR volume <name>
+\fBDeclaration:\fR volume <name>;
 .PP
 \fBAttributes:\fR
 .RS 4
@@ -183,7 +183,7 @@ Volume limit (warning color if equal or above)\&.
 .sp
 Battery percentage and status (charging/discharging)
 .sp
-\fBDeclaration:\fR battery <name>
+\fBDeclaration:\fR battery <name>;
 .PP
 \fBAttributes:\fR
 .RS 4
@@ -212,7 +212,7 @@ Critical value for the battery percentage (critical color if bellow)\&.
 .sp
 Memory usage percentage\&.
 .sp
-\fBDeclaration:\fR mem <name>
+\fBDeclaration:\fR mem <name>;
 .PP
 \fBAttributes:\fR
 .RS 4
@@ -288,6 +288,8 @@ Unit the status bar should use for displaying speeds\&.
 .SS "WIFI"
 .sp
 Wireless network interface SSID\&.
+.sp
+\fBDeclaration:\fR wireless <name>;
 .PP
 interface (type: string literal; default value: "wlan0")
 .RS 4

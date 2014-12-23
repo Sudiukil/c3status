@@ -114,7 +114,7 @@ The label is a string which will be displayed next to an item on the status line
 
 Formatted system time and date.
 
-*Declaration:* date <name>
+*Declaration:* date <name>;
 
 *Attributes:*::
 
@@ -125,7 +125,7 @@ Format for the system time and date.
 
 ALSA device volume.
 
-*Declaration:* volume <name>
+*Declaration:* volume <name>;
 
 *Attributes:*::
 
@@ -139,7 +139,7 @@ Volume limit (warning color if equal or above).
 
 Battery percentage and status (charging/discharging)
 
-*Declaration:* battery <name>
+*Declaration:* battery <name>;
 
 *Attributes:*::
 
@@ -159,7 +159,7 @@ Critical value for the battery percentage (critical color if bellow).
 
 Memory usage percentage.
 
-*Declaration:* mem <name>
+*Declaration:* mem <name>;
 
 *Attributes:*::
 
@@ -212,6 +212,8 @@ Unit the status bar should use for displaying speeds.
 === WIFI
 
 Wireless network interface SSID.
+
+*Declaration:* wireless <name>;
 
 interface (type: string literal; default value: "wlan0"):::
 Name of the network interface from which to get the SSID.
