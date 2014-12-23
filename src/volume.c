@@ -48,15 +48,15 @@ int *get_alsa_infos(const char *selem_name) {
 
 char *gen_alsa_str_volume_infos(int pcent, int is_active) {
 
-	char *str_pcent = malloc(8*sizeof(char));
+	char *str_pcent = malloc(16*sizeof(char));
 
 	if(is_active) {
-		if(pcent<10) snprintf(str_pcent, 8, "0%d%%", pcent);
-		else snprintf(str_pcent, 8, "%d%%", pcent);
+		if(pcent<10) snprintf(str_pcent, 16, "0%d%%", pcent);
+		else snprintf(str_pcent, 16, "%d%%", pcent);
 	}
 	else {
-		if(pcent<10) snprintf(str_pcent, 8, "0%d%% [M]", pcent);
-		else snprintf(str_pcent, 8, "%d%% [M]", pcent);
+		if(pcent<10) snprintf(str_pcent, 16, "0%d%% [M]", pcent);
+		else snprintf(str_pcent, 16, "%d%% [M]", pcent);
 	}
 
 	return str_pcent;
