@@ -114,7 +114,7 @@ char *gen_str_speed(long speed, char unit) {
 
 	if(speed!=-1) {
 		if(speed>1048576) {
-			snprintf(str_speed, 16, "%ld Mi%c/s", speed/1024/1024, unit);
+			snprintf(str_speed, 16, "%.1f Mi%c/s", (float)speed/1024/1024, unit);
 		}
 		else {
 			snprintf(str_speed, 16, "%ld Ki%c/s", speed/1024, unit);
