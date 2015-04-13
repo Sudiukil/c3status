@@ -34,20 +34,14 @@ int get_cpu_load_pcent(void) {
 	else return 0;
 }
 
-int get_cpu_temp(void) {
+int get_cpu_temp(const char *current_temp_file_path) {
 
-	const char *current_temp_file_path;
 	FILE *current_temp_file;
 	int current_temp;
 
-	current_temp_file_path = "/sys/class/hwmon/hwmon0/device/temp1_input";
-
 	if(!(current_temp_file = fopen(current_temp_file_path, "r"))) {
-		current_temp_file_path = "/sys/class/hwmon/hwmon0/temp1_input";
-		if(!(current_temp_file = fopen(current_temp_file_path, "r"))) {
-			fprintf(stderr, "Error: Can't get CPU temperature: %s: %s\n", current_temp_file_path, strerror(errno));
-			return -1;
-		}
+		fprintf(stderr, "Error: Can't get CPU temperature: %s: %s\n", current_temp_file_path, strerror(errno));
+		return -1;
 	}
 
 	fscanf(current_temp_file, "%d", &current_temp);
@@ -62,6 +56,7 @@ void update_cpu(cpu *c) {
 	if(c->initialized==0) {
 		if(!(c->warning_load_pcent)) c->warning_load_pcent = 75;
 		if(!(c->critical_load_pcent)) c->critical_load_pcent = 90;
+		if(!(c->current_temp_file_path)) c->current_temp_file_path = "/sys/class/hwmon/hwmon0/device/temp1_input";
 		if(!(c->warning_temperature)) c->warning_temperature = 60;
 		if(!(c->critical_temperature)) c->critical_temperature = 75;
 		if(!(c->label)) c->label = "CPU";
@@ -74,7 +69,7 @@ void update_cpu(cpu *c) {
 	}
 
 	if(c->temperature_enable) {
-		c->temperature = get_cpu_temp();
+		c->temperature = get_cpu_temp(c->current_temp_file_path);
 		c->temperature_status = test_value(c->temperature, c->warning_temperature, c->critical_temperature);
 	}
 }

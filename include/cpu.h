@@ -16,6 +16,7 @@ typedef struct cpu {
 	int critical_load_pcent;
 
 	int temperature_enable;
+	const char *current_temp_file_path;
 	int temperature;
 	int temperature_status;
 	int warning_temperature;
@@ -32,7 +33,7 @@ int prev_total;
 int get_cpu_load_pcent(void);
 
 // Calculates the CPU temperature
-int get_cpu_temp(void);
+int get_cpu_temp(const char *current_temp_file_path);
 
 // Updates a CPU infos
 void update_cpu(cpu *c);
