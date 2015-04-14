@@ -63,7 +63,7 @@ You can also specify an update interval in seconds (default is 1) with the '-t' 
 
 To change what is displayed by c3status you need to edit a **config.h** file.
 
-Provided **config.example.c** displays a few informations on the status bar and quickly explains how to write your **config.h**.
+Provided **config.example.h** displays a few informations on the status bar and quickly explains how to write your **config.h**.
 You can also see the man page for more info about the way to configure c3status.
 
 ## License
