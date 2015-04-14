@@ -27,7 +27,7 @@ void conf(void) {
 	data_color = "#cccccc";
 
 	/* These are items' configuration */
-	d.format = "%d/%m/%Y - %H:%M:%S";	
+	d.format = "%d/%m/%Y - %H:%M";
 
 	c.load_pcent_enable = 1;
 	c.temperature_enable = 1;

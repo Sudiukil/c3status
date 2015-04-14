@@ -7,7 +7,7 @@
 void update_date(date *d) {
 
 	if(!(d->initialized)) {
-		if(!(d->format)) d->format = "%d/%m/%Y - %H:%M:%S";
+		if(!(d->format)) d->format = "%d/%m/%Y - %H:%M";
 		d->initialized = 1;
 	}
 
