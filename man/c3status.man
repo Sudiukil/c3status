@@ -50,7 +50,7 @@ void conf(void) {
 	label_color = "#767676";
 	data_color = "#cccccc";
 
-	d.format = "%d/%m/%Y - %H:%M:%S";	
+	d.format = "%d/%m/%Y - %H:%M";	
 
 	c.load_pcent_enable = 1;
 	c.temperature_enable = 1;
@@ -188,6 +188,9 @@ Critical value for the CPU load percentage (critical color if equal or above).
 
 temperature_enable (type: boolean (0 or 1); default value: 0):::
 Enables the display of CPU temperature if set to 1.
+
+current_temp_file_path (type: string literal; default value: "/sys/class/hwmon/hwmon0/temp1_input"):::
+Path of the file containing CPU temperature.
 
 warning_temperature (type: numerical value; default value: 60):::
 Warning value for the CPU temperature (warning color if between warning_temperature and critical_temperature).
