@@ -2,12 +2,12 @@
 .\"     Title: c3status
 .\"    Author: Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: December 2014
+.\"      Date: December 2014-2015
 .\"    Manual: \ \&
 .\"    Source: \ \& 0.1
 .\"  Language: English
 .\"
-.TH "C3STATUS" "1" "December 2014" "\ \& 0\&.1" "\ \&"
+.TH "C3STATUS" "1" "December 2014\-2015" "\ \& 0\&.1" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -74,7 +74,7 @@ void conf(void) {
         label_color = "#767676";
         data_color = "#cccccc";
 
-        d\&.format = "%d/%m/%Y \- %H:%M:%S";
+        d\&.format = "%d/%m/%Y \- %H:%M";
 
         c\&.load_pcent_enable = 1;
         c\&.temperature_enable = 1;
@@ -256,6 +256,11 @@ temperature_enable (type: boolean (0 or 1); default value: 0)
 Enables the display of CPU temperature if set to 1\&.
 .RE
 .PP
+current_temp_file_path (type: string literal; default value: "/sys/class/hwmon/hwmon0/temp1_input")
+.RS 4
+Path of the file containing CPU temperature\&.
+.RE
+.PP
 warning_temperature (type: numerical value; default value: 60)
 .RS 4
 Warning value for the CPU temperature (warning color if between warning_temperature and critical_temperature)\&.
@@ -345,7 +350,7 @@ Probably a lot :)
 Report bugs to <sudiukil@gmx\&.fr>
 .SH "COPYRIGHT"
 .sp
-Copyright (c) 2014, Quentin Sonrel (Sudiukil) <sudiukil@gmx\&.fr> File under the terms of the ISC license\&. http://opensource\&.org/licenses/ISC
+Copyright (c) 2014\-2015, Quentin Sonrel (Sudiukil) <sudiukil@gmx\&.fr> File under the terms of the ISC license\&. http://opensource\&.org/licenses/ISC
 .SH "AUTHOR"
 .PP
 \fBQuentin Sonrel (Sudiukil)\fR <\&sudiukil@gmx\&.fr\&>

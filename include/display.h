@@ -1,4 +1,4 @@
-// Copyright (c) 2014, Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
+// Copyright (c) 2014-2015, Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
 // File under the terms of the ISC license, see LICENSE (or http://opensource.org/licenses/ISC) for complete copy.
 
 #ifndef DISPLAY_H_INCLUDED
