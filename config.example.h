@@ -32,7 +32,7 @@ void conf(void) {
 	c.load_pcent_enable = 1;
 	c.temperature_enable = 1;
 
-	n.interface = "enp4s0";
+	n.interface = "eth0";
 	n.unit = 'o';
 
 	home.mount_point = "/home";
