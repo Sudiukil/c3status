@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-W -Wall -Wwrite-strings -Wfloat-equal
+CFLAGS=-W -Wall -Wwrite-strings -Wfloat-equal -Wuninitialized
 LDFLAGS=-Iinclude -lm -lasound -liw
 
 SRC=$(wildcard src/*.c)
