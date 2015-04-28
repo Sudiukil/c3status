@@ -21,15 +21,11 @@ typedef struct net {
 	int initialized;
 } net;
 
-char format_dl[16], format_ul[64];
 long prev_received;
 long prev_transmitted;
 
-// Calculates the download speed on specified interface
-long get_dl_speed(const char *interface);
-
-// Calculates the upload speed on specified interface
-long get_ul_speed(const char *interface);
+// Calculates the download and upload speeds on specified interface
+unsigned long long *get_dl_ul_speed(const char *interface);
 
 // Generates the download or upload infos as a string (x unit/s)
 char *gen_str_speed(long speed, char unit);
