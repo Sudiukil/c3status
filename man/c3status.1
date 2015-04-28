@@ -2,12 +2,12 @@
 .\"     Title: c3status
 .\"    Author: Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: December 2014-2015
+.\"      Date: April 2015
 .\"    Manual: \ \&
 .\"    Source: \ \& 0.1
 .\"  Language: English
 .\"
-.TH "C3STATUS" "1" "December 2014\-2015" "\ \& 0\&.1" "\ \&"
+.TH "C3STATUS" "1" "April 2015" "\ \& 0\&.1" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -288,6 +288,11 @@ Name of the network interface from which to get the speeds\&.
 unit (type: character; default value: \*(AqB\*(Aq)
 .RS 4
 Unit the status bar should use for displaying speeds\&.
+.RE
+.PP
+threshold (type: numerical value; default value: 1)
+.RS 4
+Threshold (in Kio/KiB) below which displayed speeds will remain at 0 (allow to ignore uninteresting little values)\&.
 .RE
 .RE
 .SS "WIFI"

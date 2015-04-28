@@ -82,17 +82,16 @@ unsigned long long *get_dl_ul_speed(const char *interface) {
 	return dl_ul;
 }
 
-char *gen_str_speed(long speed, char unit) {
+char *gen_str_speed(long speed, char unit, int threshold) {
 
 	char *str_speed = malloc(16*sizeof(char));
 
 	if(speed!=-1) {
-		if(speed>1048576) {
-			snprintf(str_speed, 16, "%.1f Mi%c/s", (float)speed/1024/1024, unit);
+		if(speed>=threshold*1024) {
+			if(speed>1048576) snprintf(str_speed, 16, "%.1f Mi%c/s", (float)speed/1024/1024, unit);
+			else snprintf(str_speed, 16, "%ld Ki%c/s", speed/1024, unit);
 		}
-		else {
-			snprintf(str_speed, 16, "%ld Ki%c/s", speed/1024, unit);
-		}
+		else snprintf(str_speed, 16, "0 Ki%c/s", unit);
 	}
 	else snprintf(str_speed, 16, "Error");
 
@@ -106,7 +105,8 @@ void update_net(net *n) {
 	if(!(n->initialized)) {
 		if(!(n->interface)) n->interface = "eth0";
 		if(!(n->unit)) n->unit = 'B';
-		if(!(n->label)) n->label = "NET";
+		if(!(n->threshold)) n->threshold = 1;
+		if(!(n->label)) n->label = "NET ↓";
 		n->initialized = 1;
 	}
 
@@ -124,11 +124,11 @@ void display_net(net *n) {
 
 	update_net(n);
 
-	dl_speed = gen_str_speed(n->dl_speed, n->unit);
-	ul_speed = gen_str_speed(n->ul_speed, n->unit);
+	dl_speed = gen_str_speed(n->dl_speed, n->unit, n->threshold);
+	ul_speed = gen_str_speed(n->ul_speed, n->unit, n->threshold);
 
 	display("net", "download", n->label, dl_speed, 0);
-	display("net", "upload", NULL, ul_speed, 0);
+	display("net", "upload", "↑", ul_speed, 0);
 
 	free(dl_speed);
 	free(ul_speed);

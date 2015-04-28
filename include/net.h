@@ -17,6 +17,8 @@ typedef struct net {
 
 	char unit;
 
+	int threshold;
+
 	const char *label;
 	int initialized;
 } net;
@@ -28,7 +30,7 @@ long prev_transmitted;
 unsigned long long *get_dl_ul_speed(const char *interface);
 
 // Generates the download or upload infos as a string (x unit/s)
-char *gen_str_speed(long speed, char unit);
+char *gen_str_speed(long speed, char unit, int threshold);
 
 // Updates net infos
 void update_net(net *n);

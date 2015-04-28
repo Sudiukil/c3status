@@ -1,7 +1,7 @@
 c3status(1)
 ===========
 Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
-v0.1, December 2014-2015
+v0.1, April 2015
 
 == NAME
 
@@ -211,6 +211,9 @@ Name of the network interface from which to get the speeds.
 
 unit (type: character; default value: \'B'):::
 Unit the status bar should use for displaying speeds.
+
+threshold (type: numerical value; default value: 1):::
+Threshold (in Kio/KiB) below which displayed speeds will remain at 0 (allow to ignore uninteresting little values).
 
 === WIFI
 
