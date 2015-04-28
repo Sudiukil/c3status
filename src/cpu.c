@@ -56,7 +56,7 @@ void update_cpu(cpu *c) {
 	if(c->initialized==0) {
 		if(!(c->warning_load_pcent)) c->warning_load_pcent = 75;
 		if(!(c->critical_load_pcent)) c->critical_load_pcent = 90;
-		if(!(c->current_temp_file_path)) c->current_temp_file_path = "/sys/class/hwmon/hwmon0/device/temp1_input";
+		if(!(c->current_temp_file_path)) c->current_temp_file_path = "/sys/class/hwmon/hwmon0/temp1_input";
 		if(!(c->warning_temperature)) c->warning_temperature = 60;
 		if(!(c->critical_temperature)) c->critical_temperature = 75;
 		if(!(c->label)) c->label = "CPU";
