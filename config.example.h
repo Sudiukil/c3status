@@ -11,7 +11,6 @@ cpu c;
 fs home;
 fs root;
 net n;
-music mu;
 
 /* Global & items' configuration
  * Every attribute of every item have a default value that will be used if the value is not user-defined here
@@ -37,9 +36,6 @@ void conf(void) {
 
 	home.mount_point = "/home";
 	root.mount_point = "/";
-
-	mu.ncmpcpp = 1;
-	mu.label = "♪";
 }
 
 /* Display of items
@@ -47,7 +43,6 @@ void conf(void) {
  * display_<item_type>(&<item_name>); */
 void update(void) {
 
-	display_music(&mu);
 	display_fs(&root);
 	display_fs(&home);
 	display_net(&n);
