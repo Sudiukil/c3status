@@ -3,9 +3,10 @@
 
 #include "general.h"
 
-void print_usage() {
+void print_usage(int is_err) {
 
-	printf("Usage: c3status [-c CONFIG_FILE] [-t REFRESH_INTERVAL]\n");
+	if(is_err) fprintf(stderr, "Usage: c3status [-c CONFIG_FILE] [-t REFRESH_INTERVAL]\n");
+	else printf("Usage: c3status [-c CONFIG_FILE] [-t REFRESH_INTERVAL]\n");
 }
 
 char *normalize(int value, char appendix) {
