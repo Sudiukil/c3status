@@ -40,6 +40,8 @@ Even if c3status aims to be extensible by anyone using it, i obviously wrote som
   - [x] Better errors handling
   - [x] Real makefile
   - [x] Man page
+  - [ ] Real config file (instead of config.h + recompile)
+  - [ ] Better command line arguments handling
 
 ## How to install and use c3status
 
