@@ -10,39 +10,40 @@
 
 int main(int argc, char **argv) {
 
+	char arg;
+	int refresh_interval, i;
 	struct timeval t1, t2;
 	float elapsed_time;
-	int refresh_interval;
 
-	if(argc>1) {
-		if(argv[1][0]=='-') {
-			switch(argv[1][1]) {
-				case 'h':
-					printf("Usage: c3status [-t INTERVAL] [-h]\n");
-					return 0;
-					break;
-				case 't':
-					if(argv[2] && sscanf(argv[2], "%d", &refresh_interval)) refresh_interval = refresh_interval*1000;
-					else {
-						printf("'%s' option need a numerical value.\n", argv[1]);
-						printf("See 'c3status -h' or 'man c3status' for more information.\n");
-						return 1;
-					}
-					break;
-				default:
-					printf("c3status: invalid '%s' option.\n", argv[1]);
-					printf("See 'c3status -h' or 'man c3status' for more information.\n");
+	refresh_interval = 1000;
+
+	while((arg = getopt(argc, argv, "t:h"))!=-1) {
+		switch(arg) {
+			case 't':
+				if((sscanf(optarg, "%d", &refresh_interval))) refresh_interval = refresh_interval*1000;
+				else {
+					fprintf(stderr, "Update interval must be an integer value\n");
+					print_usage(1);
 					return 1;
-					break;
-			}
-		}
-		else {
-			printf("c3status: invalid '%s' option.\n", argv[1]);
-			printf("See 'c3status -h' or 'man c3status' for more information.\n");
-			return 1;
+				}
+				break;
+			case 'h':
+				print_usage(0);
+				return 0;
+				break;
+			case '?':
+				if(isprint(optopt)) {
+					print_usage(1);
+					return 1;
+				}
+				else printf("Unknown error parsing command line arguments: 0x%08x\n", optopt);
+				break;
+			default:
+				break;
 		}
 	}
-	else refresh_interval = 1000;
+
+	for(i=optind; i<argc; i++) printf("Useless command line argument: %s\n", argv[i]);
 
 	printf("{\"version\":1}\n");
 	printf("[[],\n");

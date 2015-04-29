@@ -3,6 +3,11 @@
 
 #include "general.h"
 
+void print_usage() {
+
+	printf("Usage: c3status [-c CONFIG_FILE] [-t REFRESH_INTERVAL]\n");
+}
+
 char *normalize(int value, char appendix) {
 
 	char *str = malloc(8*sizeof(char));

@@ -7,6 +7,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+// Prints the command line usage of c3status
+void print_usage();
+
 // Appends the unit to a percentage or temperature value
 char *normalize(int value, char appendix);
 
