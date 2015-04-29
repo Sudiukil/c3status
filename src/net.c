@@ -68,6 +68,13 @@ unsigned long long *get_dl_ul_speed(const char *interface) {
 	free(stripped_line);
 	free(found_iface);
 
+	if(!done) {
+		fprintf(stderr, "Error: Can't get %s upload speed: not found in %s\n", interface, net_dev_file_path);
+		dl_ul[0] = -1;
+		dl_ul[1] = -1;
+		return dl_ul;
+	}
+
 	dl_ul[0] = 0;
 	dl_ul[1] = 0;
 
