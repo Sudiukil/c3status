@@ -7,7 +7,7 @@ c3status is designed to be as lightweight as possible by using system calls and 
 
 ## Current and planned features
 
-Even if c3status aims to be extensible by anyone using it, i obviously wrote some functions for my personal use, and i plan to write some more, here is what is currently available and what will probably be:
+Even if c3status aims to be extensible by anyone using it, I obviously wrote some functions for my personal use, and I plan to write some more, here is what is currently available and what will probably be:
 
 - Basic infos:
   - [x] System time and/or date
@@ -21,7 +21,7 @@ Even if c3status aims to be extensible by anyone using it, i obviously wrote som
   - [x] Disks usage (in %)
 
 - Network infos:
-  - [x] Network speed
+  - [x] Network download and upload speed
   - [x] Wifi ESSID
   - [ ] Wifi signal percentage
 
@@ -40,10 +40,41 @@ Even if c3status aims to be extensible by anyone using it, i obviously wrote som
   - [x] Better errors handling
   - [x] Real makefile
   - [x] Man page
+  - [x] Better command line arguments handling
   - [ ] Real config file (instead of config.h + recompile)
-  - [ ] Better command line arguments handling
 
-## How to install and use c3status
+## How to build, install and use c3status
+
+### Dependencies
+
+To build c3status you will need to install a few dependencies which are Alsa and Wireless-tools development files.
+Under Debian 8 "Jessie" you can have those by installing the following packages:
+
+```
+libasound2-dev
+libiw-dev
+```
+
+You can install those with:
+
+```
+apt-get install libasound2-dev libiw-dev
+```
+
+Additionally, if you want to rebuild the man page of c3status, you will need those packages:
+
+```
+asciidoc
+libxml2-utils
+docbook-xml
+xsltproc
+```
+
+Note that you should use `apt-get install --no-install-recommends` for installing the asciidoc as apt-get will try to install a **lot** of recommended yet useless packages.
+
+Note that those packages should be available under any Linux distribution, though their names may vary.
+
+### Building and installing
 
 Installing c3status is quite easy:
 
