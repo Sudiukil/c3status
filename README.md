@@ -71,8 +71,9 @@ xsltproc
 ```
 
 Note that you should use `apt-get install --no-install-recommends` for installing the asciidoc as apt-get will try to install a **lot** of recommended yet useless packages.
+Those packages should be available under any Linux distribution, though their names may vary.
 
-Note that those packages should be available under any Linux distribution, though their names may vary.
+If you want to rebuild the documentation (for now it is only a HTML version of the present README), you will need the `pandoc` package.
 
 ### Building and installing
 
