@@ -23,6 +23,9 @@ config.h:
 manpage:
 	make -C man
 
+doc:
+	make -C docs
+
 clean:
 	rm src/*.o
 
