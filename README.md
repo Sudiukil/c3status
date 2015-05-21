@@ -10,38 +10,33 @@ c3status is designed to be as lightweight as possible by using system calls and 
 Even if c3status aims to be extensible by anyone using it, I obviously wrote some functions for my personal use, and I plan to write some more, here is what is currently available and what will probably be:
 
 - Basic infos:
-  - [x] System time and/or date
-  - [x] Alsa volume
-
+	- [x] System time and/or date
+	- [x] Alsa volume
 - System infos:
-  - [x] CPU usage
-  - [x] CPU temperature
-  - [x] RAM usage (in %)
-  - [ ] GPU temperature
-  - [x] Disks usage (in %)
-
+	- [x] CPU usage
+	- [x] CPU temperature
+	- [x] RAM usage (in %)
+	- [ ] GPU temperature
+	- [x] Disks usage (in %)
 - Network infos:
-  - [x] Network download and upload speed
-  - [x] Wifi ESSID
-  - [ ] Wifi signal percentage
-
+	- [x] Network download and upload speed
+	- [x] Wifi ESSID
+	- [ ] Wifi signal percentage
 - Battery infos:
-  - [x] Battery percentage
-  - [x] Battery state
-  - [x] Possibility to select another battery than BAT0
-  - [ ] Remaining time on battery
-
+	- [x] Battery percentage
+	- [x] Battery state
+	- [x] Possibility to select another battery than BAT0
+	- [ ] Remaining time on battery
 - Other infos:
-  - [x] ncmpcpp current playing music
-  - [x] moc current playing music
-
+	- [x] ncmpcpp current playing music
+	- [x] moc current playing music
 - Other things to do:
-  - [x] Cleaner and easier way to configure c3status (main C file is currently the only way to configure it)
-  - [x] Better errors handling
-  - [x] Real makefile
-  - [x] Man page
-  - [x] Better command line arguments handling
-  - [ ] Real config file (instead of config.h + recompile)
+	- [x] Cleaner and easier way to configure c3status (main C file is currently the only way to configure it)
+	- [x] Better errors handling
+	- [x] Real makefile
+	- [x] Man page
+	- [x] Better command line arguments handling
+	- [ ] Real config file (instead of config.h + recompile)
 
 ## How to build, install and use c3status
 
