@@ -1,6 +1,6 @@
 # c3status
 
-c3status is a simple status bar for i3wm written in C.
+c3status is a simple status line generator for i3bar written in C.
 
 The main goal of c3status is to be simple to understand and easily extensible by writing functions and recompile the code, which allow you to display almost anything in your status bar.
 c3status is designed to be as lightweight as possible by using system calls and by getting info at a low level without needing to run shell commands.
@@ -65,7 +65,7 @@ docbook-xml
 xsltproc
 ```
 
-Note that you should use `apt-get install --no-install-recommends` for installing the asciidoc as apt-get will try to install a **lot** of recommended yet useless packages.
+Note that you should use `apt-get install --no-install-recommends` for installing the asciidoc package as apt-get will try to install a **lot** of recommended yet useless packages.
 Those packages should be available under any Linux distribution, though their names may vary.
 
 If you want to rebuild the documentation (for now it is only a HTML version of the present README), you will need the `pandoc` package.
