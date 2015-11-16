@@ -27,7 +27,7 @@ long prev_received;
 long prev_transmitted;
 
 // Calculates the download and upload speeds on specified interface
-unsigned long long *get_dl_ul_speed(const char *interface);
+long *get_dl_ul_speed(const char *interface);
 
 // Generates the download or upload infos as a string (x unit/s)
 char *gen_str_speed(long speed, char unit, int threshold);

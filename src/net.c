@@ -4,18 +4,18 @@
 #include "net.h"
 #include "display.h"
 
-unsigned long long *get_dl_ul_speed(const char *interface) {
+long *get_dl_ul_speed(const char *interface) {
 
 	const char *net_dev_file_path;
 	FILE *net_dev_file;
 	char *buffer, *stripped_line, *found_iface;
 	int done, i, j;
 	char last_char;
-	unsigned long long received_bytes, transmitted_bytes, diff;
-	unsigned long long *dl_ul;
+	long long received_bytes, transmitted_bytes, diff;
+	long *dl_ul;
 
 	net_dev_file_path = "/proc/net/dev";
-	dl_ul = malloc(2*sizeof(unsigned long long));
+	dl_ul = malloc(2*sizeof(long));
 
 	if(!(net_dev_file = fopen(net_dev_file_path, "r"))) {
 		fprintf(stderr, "Error: Can't get %s upload speed: %s: %s\n", interface, net_dev_file_path, strerror(errno));
@@ -107,7 +107,7 @@ char *gen_str_speed(long speed, char unit, int threshold) {
 
 void update_net(net *n) {
 
-	unsigned long long *dl_ul;
+	long *dl_ul;
 
 	if(!(n->initialized)) {
 		if(!(n->interface)) n->interface = "eth0";

@@ -17,13 +17,13 @@ typedef struct music {
 } music;
 
 // Gets the current playing infos from ncmpcpp
-char *gen_ncmpcpp_infos();
+char *gen_ncmpcpp_infos(void);
 
 // Checks if MOC is playing music
-int is_moc_music_played();
+int is_moc_music_played(void);
 
 // Gets the current playing infos from mocp
-char *gen_moc_infos();
+char *gen_moc_infos(void);
 
 // Updates a music player infos
 void update_music(music *m);

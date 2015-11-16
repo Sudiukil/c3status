@@ -4,7 +4,7 @@
 #include "music.h"
 #include "display.h"
 
-char *gen_ncmpcpp_infos() {
+char *gen_ncmpcpp_infos(void) {
 
 	char *infos = malloc(256*sizeof(char));
 
@@ -18,7 +18,7 @@ char *gen_ncmpcpp_infos() {
 	return infos;
 }
 
-int is_moc_music_played() {
+int is_moc_music_played(void) {
 
 	char infos;
 
@@ -32,7 +32,7 @@ int is_moc_music_played() {
 	else return 0;
 }
 
-char *gen_moc_infos() {
+char *gen_moc_infos(void) {
 
 	char *infos = malloc(256*sizeof(char));
 

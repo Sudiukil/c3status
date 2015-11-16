@@ -26,8 +26,8 @@ typedef struct cpu {
 	int initialized;
 } cpu;
 
-int prev_idle;
-int prev_total;
+long prev_idle;
+long prev_total;
 
 // Calculates the CPU usage percentage
 int get_cpu_load_pcent(void);

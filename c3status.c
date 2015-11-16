@@ -10,10 +10,9 @@
 
 int main(int argc, char **argv) {
 
-	char arg;
-	int refresh_interval, i;
+	int arg, refresh_interval, i;
 	struct timeval t1, t2;
-	float elapsed_time;
+	time_t elapsed_time;
 
 	refresh_interval = 1000;
 
@@ -64,7 +63,7 @@ int main(int argc, char **argv) {
 
 		gettimeofday(&t2, NULL);
 		elapsed_time = ((t2.tv_sec-t1.tv_sec)*1000)+((t2.tv_usec-t1.tv_usec)/1000);
-		if(elapsed_time<refresh_interval) usleep((refresh_interval-elapsed_time)*1000);
+		if(elapsed_time<refresh_interval) usleep((useconds_t)(refresh_interval-elapsed_time)*1000);
 	}
 
 	return 0;

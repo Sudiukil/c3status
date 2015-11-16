@@ -9,8 +9,7 @@ int get_cpu_load_pcent(void) {
 
 	const char *statfile_path;
 	FILE *statfile;
-	long user, nice, system, idle, total;
-	int diff_idle, diff_total;
+	long user, nice, system, idle, total, diff_idle, diff_total;
 
 	statfile_path = "/proc/stat";
 
@@ -30,7 +29,7 @@ int get_cpu_load_pcent(void) {
 	prev_idle = idle;
 	prev_total = total;
 
-	if(diff_total!=total) return((1000*(diff_total-diff_idle)/diff_total+5)/10);
+	if(diff_total!=total) return(int)((1000*(diff_total-diff_idle)/diff_total+5)/10);
 	else return 0;
 }
 
