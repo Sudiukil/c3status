@@ -4,11 +4,14 @@
 #include "music.h"
 #include "display.h"
 
-char *gen_ncmpcpp_infos(void) {
+char *gen_ncmpcpp_infos(int use_new_api) {
 
 	char *infos = malloc(256*sizeof(char));
 
-	FILE *ncmpcpp_stdout = popen("ncmpcpp --now-playing \"{%n. }{%t}|{%f}{ - %a}{ (%b)}\"", "r");
+	FILE *ncmpcpp_stdout;
+
+	if(use_new_api) ncmpcpp_stdout = popen("ncmpcpp --current-song \"{%n. }{%t}|{%f}{ - %a}{ (%b)}\"", "r");
+	else ncmpcpp_stdout = popen("ncmpcpp --now-playing \"{%n. }{%t}|{%f}{ - %a}{ (%b)}\"", "r");
 
 	if(fgets(infos, 256, ncmpcpp_stdout)) infos[strlen(infos)-1] = '\0';
 	else snprintf(infos, 256, "stopped");
@@ -49,6 +52,7 @@ void update_music(music *m) {
 
 	if(!(m->initialized)) {
 		if(!(m->label)) m->label = "MUSIC";
+		if(!(m->ncmpcpp_new_api)) m->ncmpcpp_new_api = 0;
 		m->initialized = 1;
 	}
 }
@@ -60,7 +64,7 @@ void display_music(music *m) {
 	update_music(m);
 
 	if(m->ncmpcpp) {
-		infos = gen_ncmpcpp_infos();
+		infos = gen_ncmpcpp_infos(m->ncmpcpp_new_api);
 		display("music", "ncmpcpp", m->label, infos, 0);
 		free(infos);
 	}

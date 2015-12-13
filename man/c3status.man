@@ -252,6 +252,9 @@ NCMPCPP or MOC played title (warning: uses shell commands calls, may slow down c
 ncmpcpp (type: boolean (0 or 1); default value: 0):::
 Enables the display of ncmpcpp info if set to 1.
 
+ncmpcpp_new_api (type: boolean (0 or 1); default value: 0)::::
+Uses new ncmpcpp API (ncmpcpp > 0.5.10).
+
 moc (type: boolean (0 or 1); default value: 0):::
 Enables the display of moc info if set to 1.
 

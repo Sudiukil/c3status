@@ -10,6 +10,7 @@
 
 typedef struct music {
 	int ncmpcpp;
+	int ncmpcpp_new_api;
 	int moc;
 
 	const char *label;
@@ -17,7 +18,7 @@ typedef struct music {
 } music;
 
 // Gets the current playing infos from ncmpcpp
-char *gen_ncmpcpp_infos(void);
+char *gen_ncmpcpp_infos(int use_new_api);
 
 // Checks if MOC is playing music
 int is_moc_music_played(void);
