@@ -10,11 +10,17 @@ char *gen_ncmpcpp_infos(int use_new_api) {
 
 	FILE *ncmpcpp_stdout;
 
-	if(use_new_api) ncmpcpp_stdout = popen("ncmpcpp --current-song \"{%n. }{%t}|{%f}{ - %a}{ (%b)}\"", "r");
-	else ncmpcpp_stdout = popen("ncmpcpp --now-playing \"{%n. }{%t}|{%f}{ - %a}{ (%b)}\"", "r");
+	if(use_new_api) {
+		ncmpcpp_stdout = popen("ncmpcpp --current-song \"{%n. }{%t}|{%f}{ - %a}{ (%b)}\"", "r");
 
-	if(fgets(infos, 256, ncmpcpp_stdout)) infos[strlen(infos)-1] = '\0';
-	else snprintf(infos, 256, "stopped");
+		if(!(fgets(infos, 256, ncmpcpp_stdout))) snprintf(infos, 256, "stopped");
+	}
+	else {
+		ncmpcpp_stdout = popen("ncmpcpp --now-playing \"{%n. }{%t}|{%f}{ - %a}{ (%b)}\"", "r");
+
+		if(fgets(infos, 256, ncmpcpp_stdout)) infos[strlen(infos)-1] = '\0';
+		else snprintf(infos, 256, "stopped");
+	}
 
 	pclose(ncmpcpp_stdout);
 
