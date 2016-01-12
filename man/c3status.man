@@ -1,7 +1,7 @@
 c3status(1)
 ===========
 Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
-v0.1, April 2015
+v0.1.1, January 2016
 
 == NAME
 
@@ -35,7 +35,7 @@ More specifically, item declaration is a variable (structure) declaration, confi
 See below for an example.
 
 .Sample configuration
--------------------------------------------------
+--------------------------------------------------
 date d;
 volume v;
 mem m;
@@ -76,7 +76,7 @@ void update(void) {
 	display_volume(&v);
 	display_date(&d);
 }
--------------------------------------------------
+--------------------------------------------------
 
 === General
 
@@ -137,7 +137,7 @@ Volume limit (warning color if equal or above).
 
 === Battery
 
-Battery percentage and status (charging/discharging)
+Battery percentage, status (charging/discharging) and remaining time (until fully charged or discharged)
 
 *Declaration:* battery <name>;
 
@@ -145,6 +145,9 @@ Battery percentage and status (charging/discharging)
 
 name (type: string literal; default value: "BAT0"):::
 Battery name, can be found /sys/class/power_supply/.
+
+show_remaining_time (type: boolean (0 or 1); default value: 0):::
+Enables the display of remaining time (until fully charged or discharged) if set to 1.
 
 max_pcent (type: numerical value; default value: 95):::
 Max value for the battery percentage (ok color if equal or above).

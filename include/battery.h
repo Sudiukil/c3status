@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2015, Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
+// Copyright (c) 2014-2016, Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
 // File under the terms of the ISC license, see LICENSE (or http://opensource.org/licenses/ISC) for complete copy.
 
 #ifndef BATTERY_H_INCLUDED
@@ -11,34 +11,46 @@
 #include <errno.h>
 
 typedef struct battery {
+	// User-defined data
 	const char *name;
+	const char *label;
 
-	int pcent;
-	int pcent_status;
-	int max_pcent;
+	int show_remaining_time;
+
+	int charged_pcent;
 	int warning_pcent;
 	int critical_pcent;
 
-	char status;
+	// Intermediary data
+	char *status_fp;
+	char *capacity_fp;
+	char *energy_full_fp;
+	char *energy_now_fp;
+	char *power_now_fp;
 
-	const char *label;
+	// Collected data
+	char status;
+	int capacity;
+	int remaining_time;
+	int state;
+
 	int initialized;
 } battery;
 
-// Calculates the battery percentage
-int get_battery_pcent(const char *battery_name);
+// Initializes a battery
+void init_battery(battery *b);
 
-// Gets the battery status (battery or charging)
-char get_battery_status(const char *battery_name);
-
-// Tests the battery percentage compaired to user defined max, warning and critical values
-int test_battery_pcent(int battery_pcent, int max, int warning, int critical);
+// Frees a battery
+void free_battery(battery *b);
 
 // Updates a battery infos
-void update_battery(battery *b);
+int update_battery(battery *b);
 
 // Returns a battery infos as a string
-char *gen_battery_infos(battery *b);
+char *str_battery(battery *b);
+
+// Tests a battery capacity
+int test_battery(battery *b);
 
 // Displays a battery infos on the status bar
 void display_battery(battery *b);

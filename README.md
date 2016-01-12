@@ -26,7 +26,7 @@ Even if c3status aims to be extensible by anyone using it, I obviously wrote som
 	- [x] Battery percentage
 	- [x] Battery state
 	- [x] Possibility to select another battery than BAT0
-	- [ ] Remaining time on battery
+	- [x] Remaining time on battery
 - Other infos:
 	- [x] ncmpcpp current playing music
 	- [x] moc current playing music

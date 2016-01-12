@@ -1,103 +1,113 @@
-// Copyright (c) 2014-2015, Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
+// Copyright (c) 2014-2016, Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
 // File under the terms of the ISC license, see LICENSE (or http://opensource.org/licenses/ISC) for complete copy.
 
 #include "battery.h"
 #include "display.h"
 
-int get_battery_pcent(const char *battery_name) {
+void init_battery(battery *b) {
 
-	char *energy_full_file_path, *energy_now_file_path;
-	FILE *energy_full_file, *energy_now_file;
-	long energy_full, energy_now;
+	if(!(b->name)) b->name = "BAT0";
+	if(!(b->label)) b->label = "BAT";
+	if(!(b->show_remaining_time)) b->show_remaining_time = 0;
 
-	energy_full_file_path = malloc(64*sizeof(char));
-	energy_now_file_path = malloc(64*sizeof(char));
+	if(!(b->charged_pcent)) b->charged_pcent = 95;
+	if(!(b->warning_pcent)) b->warning_pcent = 25;
+	if(!(b->critical_pcent)) b->critical_pcent = 10;
 
-	snprintf(energy_full_file_path, 64, "/sys/class/power_supply/%s/energy_full", battery_name);
-	snprintf(energy_now_file_path, 64, "/sys/class/power_supply/%s/energy_now", battery_name);
+	b->status_fp = malloc(64*sizeof(char));
+	b->capacity_fp = malloc(64*sizeof(char));
+	b->energy_full_fp = malloc(64*sizeof(char));
+	b->energy_now_fp = malloc(64*sizeof(char));	
+	b->power_now_fp = malloc(64*sizeof(char));
 
-	if(!(energy_full_file = fopen(energy_full_file_path, "r"))) {
-		fprintf(stderr, "Error: Can't get %s percentage: %s: %s\n", battery_name, energy_full_file_path, strerror(errno));
-		free(energy_full_file_path);
-		free(energy_now_file_path);
-		return -1;
-	}
+	snprintf(b->status_fp, 64, "/sys/class/power_supply/%s/status", b->name);
+	snprintf(b->capacity_fp, 64, "/sys/class/power_supply/%s/capacity", b->name);
+	snprintf(b->energy_full_fp, 64, "/sys/class/power_supply/%s/energy_full", b->name);
+	snprintf(b->energy_now_fp, 64, "/sys/class/power_supply/%s/energy_now", b->name);
+	snprintf(b->power_now_fp, 64, "/sys/class/power_supply/%s/power_now", b->name);
 
-	if(!(energy_now_file = fopen(energy_now_file_path, "r"))) {
-		fprintf(stderr, "Error: Can't get %s percentage: %s: %s\n", battery_name, energy_now_file_path, strerror(errno));
-		free(energy_full_file_path);
-		free(energy_now_file_path);
-		return -1;
-	}
-
-	free(energy_full_file_path);
-	free(energy_now_file_path);
-
-	fscanf(energy_full_file, "%ld", &energy_full);
-	fscanf(energy_now_file, "%ld", &energy_now);
-
-	fclose(energy_full_file);
-	fclose(energy_now_file);
-
-	return (int)round((float)energy_now/(float)energy_full*100);
+	b->initialized = 1;
 }
 
-char get_battery_status(const char *battery_name) {
+void free_battery(battery *b) {
 
-	char *status_file_path;
-	FILE *status_file;
-	char status;
+	free(b->status_fp);
+	free(b->capacity_fp);
+	free(b->energy_full_fp);
+	free(b->energy_now_fp);
+	free(b->power_now_fp);
+}
 
-	status_file_path = malloc(64*sizeof(char));
+int update_battery(battery *b) {
 
-	snprintf(status_file_path, 64, "/sys/class/power_supply/%s/status", battery_name);
+	FILE *status_f, *capacity_f, *energy_full_f, *energy_now_f, *power_now_f;
+	float energy_full, energy_now, power_now;
 
-	if(!(status_file = fopen(status_file_path, "r"))) {
-		fprintf(stderr, "Error: Can't get %s status: %s: %s\n", battery_name, status_file_path, strerror(errno));
-		free(status_file_path);
-		return 'U';
+	if(!(b->initialized)) init_battery(b);
+
+	if(!(status_f = fopen(b->status_fp, "r"))) {
+		fprintf(stderr, "Error: Can't get %s percentage: %s: %s\n", b->name, b->status_fp, strerror(errno));
+		return 0;
 	}
 
-	free(status_file_path);
-
-	fscanf(status_file, "%c", &status);
-
-	fclose(status_file);
-
-	return status;
-}
-
-int test_battery_pcent(int battery_pcent, int max, int warning, int critical) {
-
-	if(battery_pcent>critical && battery_pcent<=warning) return 1;
-	if(battery_pcent<=critical) return 2;
-	if(battery_pcent>=max) return 3;
-	if(battery_pcent==-1) return 2;
-	return 0;
-}
-
-void update_battery(battery *b) {
-
-	if(!(b->initialized)) {
-		if(!(b->name)) b->name = "BAT0";
-		if(!(b->max_pcent)) b->max_pcent = 95;
-		if(!(b->warning_pcent)) b->warning_pcent = 25;
-		if(!(b->critical_pcent)) b->critical_pcent = 10;
-		if(!(b->label)) b->label = b->name;
-		b->initialized = 1;
+	if(!(capacity_f = fopen(b->capacity_fp, "r"))) {
+		fprintf(stderr, "Error: Can't get %s percentage: %s: %s\n", b->name, b->capacity_fp, strerror(errno));
+		return 0;
 	}
 
-	b->pcent = get_battery_pcent(b->name);
-	b->pcent_status = test_battery_pcent(b->pcent, b->max_pcent, b->warning_pcent, b->critical_pcent);
-	b->status = get_battery_status(b->name);
+	if(!(energy_full_f = fopen(b->energy_full_fp, "r"))) {
+		fprintf(stderr, "Error: Can't get %s percentage: %s: %s\n", b->name, b->energy_full_fp, strerror(errno));
+		return 0;
+	}
+
+	if(!(energy_now_f = fopen(b->energy_now_fp, "r"))) {
+		fprintf(stderr, "Error: Can't get %s percentage: %s: %s\n", b->name, b->energy_now_fp, strerror(errno));
+		return 0;
+	}
+
+	if(!(power_now_f = fopen(b->power_now_fp, "r"))) {
+		fprintf(stderr, "Error: Can't get %s percentage: %s: %s\n", b->name, b->power_now_fp, strerror(errno));
+		return 0;
+	}
+
+	fscanf(status_f, "%c", &(b->status));
+	fscanf(capacity_f, "%d", &(b->capacity));
+	fscanf(energy_full_f, "%f", &energy_full);
+	fscanf(energy_now_f, "%f", &energy_now);
+	fscanf(power_now_f, "%f", &power_now);
+
+	fclose(status_f);
+	fclose(capacity_f);
+	fclose(energy_full_f);
+	fclose(energy_now_f);
+	fclose(power_now_f);
+
+	if(b->capacity > b->charged_pcent) b->state = 3;
+	else if(b->capacity > b->critical_pcent && b->capacity < b->warning_pcent) b->state = 1;
+	else if(b->capacity <= b->critical_pcent) b->state = 2;
+	else b->state = 0;
+
+	switch(b->status) {
+		case 'C':
+			b->remaining_time = (int)(((energy_full-energy_now)/power_now)*60);
+			break;
+		case 'D':
+			b->remaining_time = (int)((energy_now/power_now)*60);
+			break;
+		default:
+			b->remaining_time = 0;
+			break;
+	}
+
+	return 1;
 }
 
-char *gen_battery_infos(battery *b) {
+char *str_battery(battery *b) {
 
 	const char *status;
-	char *battery_infos;
+	char *str_battery, *str_remaining_time;
 
-	battery_infos = malloc(16*sizeof(char));
+	str_battery = malloc(32*sizeof(char));
 
 	switch(b->status) {
 		case 'C':
@@ -106,29 +116,39 @@ char *gen_battery_infos(battery *b) {
 		case 'D':
 			status = "BAT";
 			break;
+		case 'F':
+			status = "FULL";
+			break;
 		default:
 			status = "UNK";
 			break;
 	}
 
-	if(b->pcent!=-1) {
-		if(b->pcent<10) snprintf(battery_infos, 16, "0%d%% (%s)", b->pcent, status);
-		else snprintf(battery_infos, 16, "%d%% (%s)", b->pcent, status);
-	}
-	else snprintf(battery_infos, 16, "No battery");
+	str_remaining_time = malloc(16*sizeof(char));
 
-	return battery_infos;
+	if(b->show_remaining_time) snprintf(str_remaining_time, 16, " (%02d:%02d)", b->remaining_time/60, b->remaining_time%60);
+	else snprintf(str_remaining_time, 16, "");
+
+	snprintf(str_battery, 32, "%02d%% (%s)%s", b->capacity, status, str_remaining_time);
+
+	free(str_remaining_time);
+
+	return str_battery;
 }
 
 void display_battery(battery *b) {
 
-	char *battery_infos;
+	char *battery_str;
 
-	update_battery(b);
+	if(update_battery(b)) {
+		battery_str = str_battery(b);
+		display("battery", b->name, b->label, battery_str, b->state);
+	}
+	else {
+		battery_str = malloc(16*sizeof(char));
+		snprintf(battery_str, 16, "No battery");
+		display("battery", b->name, b->label, battery_str, 2);
+	}
 
-	battery_infos = gen_battery_infos(b);
-
-	display("battery", b->name, b->label, battery_infos, b->pcent_status);
-
-	free(battery_infos);
+	free(battery_str);
 }

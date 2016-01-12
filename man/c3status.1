@@ -2,12 +2,12 @@
 .\"     Title: c3status
 .\"    Author: Quentin Sonrel (Sudiukil) <sudiukil@gmx.fr>
 .\" Generator: DocBook XSL Stylesheets v1.78.1 <http://docbook.sf.net/>
-.\"      Date: April 2015
+.\"      Date: January 2016
 .\"    Manual: \ \&
-.\"    Source: \ \& 0.1
+.\"    Source: \ \& 0.1.1
 .\"  Language: English
 .\"
-.TH "C3STATUS" "1" "April 2015" "\ \& 0\&.1" "\ \&"
+.TH "C3STATUS" "1" "January 2016" "\ \& 0\&.1\&.1" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Define some portability stuff
 .\" -----------------------------------------------------------------
@@ -181,7 +181,7 @@ Volume limit (warning color if equal or above)\&.
 .RE
 .SS "Battery"
 .sp
-Battery percentage and status (charging/discharging)
+Battery percentage, status (charging/discharging) and remaining time (until fully charged or discharged)
 .sp
 \fBDeclaration:\fR battery <name>;
 .PP
@@ -191,6 +191,11 @@ Battery percentage and status (charging/discharging)
 name (type: string literal; default value: "BAT0")
 .RS 4
 Battery name, can be found /sys/class/power_supply/\&.
+.RE
+.PP
+show_remaining_time (type: boolean (0 or 1); default value: 0)
+.RS 4
+Enables the display of remaining time (until fully charged or discharged) if set to 1\&.
 .RE
 .PP
 max_pcent (type: numerical value; default value: 95)
