@@ -7,6 +7,15 @@ void display(const char *name, const char *instance, const char *label, char *da
 
 	const char *color;
 
+	if(first_run) {
+		if(!label_color) label_color = "#ffffff";
+		if(!data_color) data_color = "#ffffff";
+		if(!ok_color) ok_color = "#00ff00";
+		if(!warning_color) warning_color = "#ffff00";
+		if(!critical_color) critical_color = "#ff0000";
+		first_run = 0;
+	}
+
 	if(!label) label = "";
 
 	switch(priority) {

@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+int first_run;
 const char *label_color;
 const char *data_color;
 const char *ok_color;

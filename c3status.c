@@ -14,6 +14,7 @@ int main(int argc, char **argv) {
 	struct timeval t1, t2;
 	time_t elapsed_time;
 
+	first_run = 1;
 	refresh_interval = 1000;
 
 	while((arg = getopt(argc, argv, "t:h"))!=-1) {
