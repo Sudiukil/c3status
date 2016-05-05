@@ -28,10 +28,8 @@ doc:
 	make -C docs
 
 clean:
-	rm src/*.o
-
-mrproper: clean
-	rm $(EXEC)
+	rm -f $(OBJ)
+	rm -f $(EXEC)
 
 install: $(EXEC) man/$(EXEC).1
 	install -m 755 $(EXEC) $(DESTDIR)$(PREFIX)/bin/$(EXEC)
